@@ -19,7 +19,9 @@ Para Python 3.x
 
 python3 pobot.py
 
-Una vez ejecutado, primero nos pedirá si queremos continuar con la última sesión creada, el márgen de beneficio que queremos para cada Altcoin y la cantidad total de USDT que queremos invertir. Cuanto más grande sea el margen de beneficio escogido, tardará más en cerrar las operaciones, pero más beneficio tendremos. El bot funcionrá mientras tengamos saldo. Para su correcto funcionamiento, necesitamos tener saldo de USDT, y ninguna operacion abierta en el par USDT_BTC ni las otras AltCoins.
+Una vez ejecutado, primero nos pedirá si queremos continuar con la última sesión creada, el márgen de beneficio que queremos para cada Altcoin y la cantidad total de USDT que queremos invertir. Cuanto más grande sea el margen de beneficio escogido, tardará más en cerrar las operaciones, pero más beneficio tendremos. Si no queremos que el bot opera con alguna AltCoin, simplemente le ponemos margen 0 y ya está.
+
+El bot funcionrá mientras tengamos saldo. Para su correcto funcionamiento, necesitamos tener saldo de USDT, y ninguna operacion abierta en las Altcoins con las que vamos a operar.
 
 También nos pedirá el número de ciclos completos (Un ciclo = compra + venta) que queremos que dure el bot.
 
