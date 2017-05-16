@@ -9,6 +9,8 @@ from requests import post as _post
 from requests import get as _get
 import time
 import sys
+from datetime import datetime, timedelta
+import calendar
 
 # python 2
 try:
@@ -283,7 +285,11 @@ def historial_trades(c, n_order):
 	err = True
 	while err:
 		try:
-			trade_hist = private_order('returnTradeHistory', {'currencyPair': c})
+			final = datetime.utcnow()
+			inicio = final - timedelta(days=30)
+			unixtime1 = calendar.timegm(inicio.utctimetuple())
+			unixtime2 = calendar.timegm(final.utctimetuple())
+			trade_hist = private_order('returnTradeHistory', {'currencyPair': c, 'start': str(unixtime1)})
 			for t in trade_hist:
 				if t['orderNumber'] == n_order:
 					return True, t['type']
