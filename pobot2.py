@@ -383,19 +383,22 @@ if resumir == 's' or resumir == 'S':
 else:
 	f_historial = open('pobot.his', 'w')
 	
+	saldo_inv_usdt = 0.0
 	alt = int(input('Divisa para operar: 1-> BTC, 2-> USDT ?? '))
 	if alt == 1:
 		altstr = 'BTC'
+		saldoUSDT = leer_balance(altstr)
+		while saldo_inv_usdt <= 0.0005 or saldo_inv_usdt > saldoUSDT:
+			print('Entra saldo BTC a invertir. Maximo: ' + str(saldoUSDT) + ' ' + altstr)
+			saldo_inv_usdt = float(input('Inversion:? '))
 	else:
 		altstr = 'USDT'
-	
+		saldoUSDT = leer_balance(altstr)
+		while saldo_inv_usdt <= 20 or saldo_inv_usdt > saldoUSDT:
+			print('Entra saldo USDT a invertir. Maximo: ' + str(saldoUSDT) + ' ' + altstr)
+			saldo_inv_usdt = float(input('Inversion:? '))
+				
 	f_historial.write(altstr + '\n')
-	saldo_inv_usdt = 0.0
-	saldoUSDT = leer_balance(altstr)
-	while saldo_inv_usdt > saldoUSDT:
-		print('Entra saldo USDT a invertir. Maximo: ' + str(saldoUSDT) + ' ' + altstr)
-		saldo_inv_usdt = float(input('Inversion:? '))
-		
 	f_historial.write(str(saldo_inv_usdt) + '\n')
 	
 	print('ENTRA LOS MARGENES PARA CADA ALTCOIN. SI PONEMOS 0 ESA ALTCOIN NO SE UTILIZA EN EL BOT')
