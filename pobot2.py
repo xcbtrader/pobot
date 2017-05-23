@@ -408,9 +408,12 @@ else:
 	c_margen = ''
 	
 	for cn in a_coins:
-		print('Margen para ' + cn + ' >=0.5 o 0 para No Altcoin : ? ')
-		m1 = str(input())
-		m = float(m1.replace(',','.'))
+		if alt == 1 and cn == 'BTC':
+			m = 0.0
+		else:
+			print('Margen para ' + cn + ' >=0.5 o 0 para No Altcoin : ? ')
+			m1 = str(input())
+			m = float(m1.replace(',','.'))
 		if m >= 0.5:
 			coins.append(cn)
 			a_margen.append(m/100)
