@@ -338,7 +338,10 @@ try:
 	t = config[1].split(';')
 	Secret = t[1].strip()
 	a_c = config[2].strip()
+	b_c = config[3].strip()
 	a_coins = a_c.split(';')
+	b_coins = b_c.split(';')
+	
 except KeyboardInterrupt:
 	exit()	
 except Exception:
@@ -371,7 +374,10 @@ if resumir == 's' or resumir == 'S':
 		for mm in m:
 			if float(mm.strip()) > 0:
 				a_margen.append(float(mm.strip()))
-				coins.append(a_coins[n])
+				if altstr == 'USDT':
+					coins.append(a_coins[n])
+				else:
+					coins.append(b_coins[n])
 			n +=1
 		saldo_inv_usdt = saldo_inv_usdt/len(coins)
 		n_ciclos = int(historial[3].strip())
@@ -407,18 +413,26 @@ else:
 	a_margen = []
 	c_margen = ''
 	
-	for cn in a_coins:
-		if alt == 1 and cn == 'BTC':
-			m = 0.0
-		else:
+	if altstr == 'USDT':
+		for cn in a_coins:
 			print('Margen para ' + cn + ' >=0.5 o 0 para No Altcoin : ? ')
 			m1 = str(input())
 			m = float(m1.replace(',','.'))
-		if m >= 0.5:
-			coins.append(cn)
-			a_margen.append(m/100)
-		c_margen = c_margen + str(m/100) + ';'
-		
+			if m >= 0.5:
+				coins.append(cn)
+				a_margen.append(m/100)
+			c_margen = c_margen + str(m/100) + ';'
+
+	else:
+		for cn in b_coins:
+			print('Margen para ' + cn + ' >=0.5 o 0 para No Altcoin : ? ')
+			m1 = str(input())
+			m = float(m1.replace(',','.'))
+			if m >= 0.5:
+				coins.append(cn)
+				a_margen.append(m/100)
+			c_margen = c_margen + str(m/100) + ';'
+			
 	c_margen = c_margen[0 :-1]
 	f_historial.write(c_margen + '\n')
 	
@@ -537,4 +551,10 @@ while not finalizar_bot:
 		
 print('#########################################################')
 print('#########  BOT  FINALIZADO   CORRECTAMENTE    ###########')
+print('#########################################################')
+print('')
+print('Ejeutados ' + str(n_ciclos) + ' ciclos para ' + altstr)
+print('Para la siguientes AltCoins:')
+for nc in coins:
+	print(nc)
 print('#########################################################')
