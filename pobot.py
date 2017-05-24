@@ -70,12 +70,13 @@ def nonce():
 
 
 def leer_ticker(c):
-
+	global altstr
+	
 	err = True
 	while err:
 		try:		
 			ticker = public_order('returnTicker')
-			c = 'USDT_' + c
+			c = altstr + '_' + c
 			t = ticker[c]
 			last = float(t['last'])
 			return last
@@ -103,10 +104,11 @@ def leer_balance(c):
 			time.sleep(30)
 			
 def realizar_compra(c, last, margen, saldo_inv):
-
+	global altstr
+	
 	precio_compra = last
 	c1 = c
-	c = 'USDT_' + c
+	c = altstr + '_' + c
 
 	err = True
 	while err:	
@@ -128,8 +130,9 @@ def realizar_compra(c, last, margen, saldo_inv):
 			precio_compra = leer_ticker(c1)
 	
 def realizar_venta(c, precio_venta, margen, saldo_inv):
+	global altstr
 	
-	c = 'USDT_' + c
+	c = altstr + '_' + c
 	
 	err = True
 	while err:	
@@ -280,8 +283,9 @@ def mover_orden(num_orden_cerrar, last):
 		
 
 def historial_trades(c, n_order):
+	global altstr
 	
-	c = 'USDT_' + c
+	c = altstr + '_' + c
 	err = True
 	while err:
 		try:
@@ -306,7 +310,7 @@ def historial_trades(c, n_order):
 		
 # PROGRAMA PRINCIPAL #####################################################################
 
-global coins, API_key, Secret, _nonce
+global coins, API_key, Secret, _nonce, altstr
 
 print('')
 print('     ****************************************************************')
@@ -358,8 +362,9 @@ if resumir == 's' or resumir == 'S':
 		f_historial = open('pobot.his', 'r')
 		historial = f_historial.readlines()
 		
-		saldo_inv_usdt = float(historial[0].strip())
-		m = historial[1].split(';')
+		altstr = historial[0].strip()
+		saldo_inv_usdt = float(historial[1].strip())
+		m = historial[2].split(';')
 		a_margen = []
 		coins = []
 		n = 0
@@ -369,7 +374,7 @@ if resumir == 's' or resumir == 'S':
 				coins.append(a_coins[n])
 			n +=1
 		saldo_inv_usdt = saldo_inv_usdt/len(coins)
-		n_ciclos = int(historial[2].strip())
+		n_ciclos = int(historial[3].strip())
 		
 		f_historial.close()
 		
@@ -379,11 +384,21 @@ else:
 	f_historial = open('pobot.his', 'w')
 	
 	saldo_inv_usdt = 0.0
-	saldoUSDT = leer_balance('USDT')
-	while saldo_inv_usdt < 20 or saldo_inv_usdt > saldoUSDT:
-		print('Entra saldo USDT a invertir. Maximo: ' + str(saldoUSDT) + ' USDT')
-		saldo_inv_usdt = float(input('Inversion:? '))
-		
+	alt = int(input('Divisa para operar: 1-> BTC, 2-> USDT ?? '))
+	if alt == 1:
+		altstr = 'BTC'
+		saldoUSDT = leer_balance(altstr)
+		while saldo_inv_usdt <= 0.0005 or saldo_inv_usdt > saldoUSDT:
+			print('Entra saldo BTC a invertir. Maximo: ' + str(saldoUSDT) + ' ' + altstr)
+			saldo_inv_usdt = float(input('Inversion:? '))
+	else:
+		altstr = 'USDT'
+		saldoUSDT = leer_balance(altstr)
+		while saldo_inv_usdt <= 20 or saldo_inv_usdt > saldoUSDT:
+			print('Entra saldo USDT a invertir. Maximo: ' + str(saldoUSDT) + ' ' + altstr)
+			saldo_inv_usdt = float(input('Inversion:? '))
+				
+	f_historial.write(altstr + '\n')
 	f_historial.write(str(saldo_inv_usdt) + '\n')
 	
 	print('ENTRA LOS MARGENES PARA CADA ALTCOIN. SI PONEMOS 0 ESA ALTCOIN NO SE UTILIZA EN EL BOT')
@@ -393,9 +408,12 @@ else:
 	c_margen = ''
 	
 	for cn in a_coins:
-		print('Margen para ' + cn + ' >=0.5 o 0 para No Altcoin : ? ')
-		m1 = str(input())
-		m = float(m1.replace(',','.'))
+		if alt == 1 and cn == 'BTC':
+			m = 0.0
+		else:
+			print('Margen para ' + cn + ' >=0.5 o 0 para No Altcoin : ? ')
+			m1 = str(input())
+			m = float(m1.replace(',','.'))
 		if m >= 0.5:
 			coins.append(cn)
 			a_margen.append(m/100)
@@ -480,7 +498,7 @@ while not finalizar_bot:
 						print('### ESPERANDO 30 SEGUNDOS PARA GENERAR ORDEN DE COMPRA ###')
 						time.sleep(30)
 						a_last[j] = leer_ticker(nc)				
-						saldoUSDT = leer_balance('USDT')
+						saldoUSDT = leer_balance(altstr)
 						if saldoUSDT > saldo_inv_usdt:
 							a_order[j], a_ultimo_precio_compra[j] = realizar_compra(nc, a_last[j], a_margen[j], saldo_inv_usdt)
 							guardar_historial(a_ciclo, a_saldo, a_order, a_last, a_lecturas, a_ultimo_precio_compra)					
@@ -498,7 +516,10 @@ while not finalizar_bot:
 					print('### ESPERANDO 30 SEGUNDOS ###')
 					time.sleep(30)
 				else:
-					print('### USDT_' + nc + ' - CICLO: ' + str(a_ciclo[j]) + '/' + str(n_ciclos) + ' - NUM. LECTURAS: ' + str(a_lecturas[j]) + ' - LAST: ' + str(a_last[j]) + '$ ###') 
+					if altstr == 'BTC':
+						print('### ' + altstr + '_' + nc + ' - CICLO: ' + str(a_ciclo[j]) + '/' + str(n_ciclos) + ' - NUM. LECTURAS: ' + str(a_lecturas[j]) + ' - LAST: ' + str(100000000 * a_last[j]) + 'Sat (' + str(100000000 * a_ultimo_precio_compra[j]) + ') ###') 
+					else:
+						print('### ' + altstr + '_' + nc + ' - CICLO: ' + str(a_ciclo[j]) + '/' + str(n_ciclos) + ' - NUM. LECTURAS: ' + str(a_lecturas[j]) + ' - LAST: ' + str(a_last[j]) + '$ (' + str(a_ultimo_precio_compra[j]) + ') ###') 						
 					print('### ESPERANDO 30 SEGUNDOS A QUE SE CIERRE LA ORDEN ###')
 					time.sleep(30)
 				
