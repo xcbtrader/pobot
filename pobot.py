@@ -115,7 +115,7 @@ def realizar_compra(c, last, margen, saldo_inv):
 		try:
 			make_order_buy = private_order('buy', {'currencyPair':c, 'rate': str(precio_compra), 'amount': str(saldo_inv/precio_compra), 'postOnly': 1})
 			print('**********************************************************************************************************************************')
-			print('*** ' + c + ' CREADA ORDEN DE COMPRA NUM ' + make_order_buy['orderNumber'] + ' - PRECIO: ' + str(precio_compra) + ' $ - IVERSION: ' + str(saldo_inv) + ' $ ***')
+			print('*** ' + c + ' CREADA ORDEN DE COMPRA NUM ' + make_order_buy['orderNumber'] + ' - PRECIO: ' + str(precio_compra) + ' $ - INVERSION: ' + str(saldo_inv) + ' $ ***')
 			print('**********************************************************************************************************************************')
 			err = False
 			return make_order_buy['orderNumber'], precio_compra
@@ -553,8 +553,8 @@ print('#########################################################')
 print('#########  BOT  FINALIZADO   CORRECTAMENTE    ###########')
 print('#########################################################')
 print('')
-print('Ejeutados ' + str(n_ciclos) + ' ciclos para ' + altstr)
-print('Para la siguientes AltCoins:')
+print('Ejecutados ' + str(n_ciclos) + ' ciclos para ' + altstr)
+print('Para las siguientes AltCoins:')
 for nc in coins:
 	print(nc)
 print('#########################################################')
