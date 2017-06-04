@@ -19,6 +19,13 @@ except:
     from urllib.parse import urlencode as _urlencode
 
 
+def print_error(message):
+    print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
+    print('### ERROR AL ' + message + ' ###')
+    print('### ESPERANDO 30 SEGUNDOS ###')
+    time.sleep(30)
+
+
 def private_order(command, args={}):
     global API_key, Secret
 
@@ -38,11 +45,7 @@ def private_order(command, args={}):
             exit()
         except Exception:
             print(ret)
-            print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
-            print('### ERROR AL EJECUTAR PRIVATE ORDER ' + command + ' ###')
-            print('### ESPERANDO 30 SEGUNDOS ###')
-            time.sleep(30)
-
+            print_error('EJECUTAR PRIVATE ORDER ' + command)
 
 def public_order(command, args={}):
     err = True
@@ -55,10 +58,7 @@ def public_order(command, args={}):
             exit()
         except Exception:
             print(ret)
-            print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
-            print('### ERROR AL EJECUTAR PUBLIC ORDER ' + command + ' ###')
-            print('### ESPERANDO 30 SEGUNDOS ###')
-            time.sleep(30)
+            print_error('EJECUTAR PUBLIC ORDER ' + command)
 
 
 def nonce():
@@ -81,10 +81,7 @@ def leer_ticker(c):
         except KeyboardInterrupt:
             exit()
         except Exception:
-            print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
-            print('### ERROR AL LEER PRECIO ' + c + ' ###')
-            print('### ESPERANDO 30 SEGUNDOS ###')
-            time.sleep(30)
+            print_error('LEER PRECIO ' + c)
 
 
 def leer_balance(c):
@@ -97,10 +94,7 @@ def leer_balance(c):
             exit()
         except Exception:
             print(balance)
-            print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
-            print('### ERROR AL LEER BALANCE ' + c + ' ###')
-            print('### ESPERANDO 30 SEGUNDOS ###')
-            time.sleep(30)
+            print_error('LEER BALANCE ' + c)
 
 
 def realizar_compra(c, last, margen, saldo_inv):
@@ -123,10 +117,7 @@ def realizar_compra(c, last, margen, saldo_inv):
             exit()
         except Exception:
             print(make_order_buy)
-            print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
-            print('### ERROR AL CREAR ORDEN DE COMPRA ' + c + ' ###')
-            print('### ESPERANDO 30 SEGUNDOS ###')
-            time.sleep(30)
+            print_error('CREAR ORDEN DE COMPRA ' + c)
             precio_compra = leer_ticker(c1)
 
 
@@ -148,10 +139,7 @@ def realizar_venta(c, precio_venta, margen, saldo_inv):
             exit()
         except Exception:
             print(make_order_sell)
-            print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
-            print('### ERROR AL CREAR ORDEN DE VENTA ' + c + ' ###')
-            print('### ESPERANDO 30 SEGUNDOS ###')
-            time.sleep(30)
+            print_error('CREAR ORDEN DE VENTA ' + c)
 
 
 def guardar_historial(a_ciclo, a_saldo, a_order, a_last, a_lecturas, a_ultimo_precio_compra):
@@ -256,10 +244,7 @@ def cancelar_orden(num_orden_cerrar):
     except KeyboardInterrupt:
         exit()
     except Exception:
-        print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
-        print('### ERROR AL CANCELAR ORDEN ###')
-        print('### ESPERANDO 30 SEGUNDOS ###')
-        time.sleep(30)
+        print_error('CANCELAR ORDEN')
 
 
 def mover_orden(num_orden_cerrar, last):
@@ -273,10 +258,7 @@ def mover_orden(num_orden_cerrar, last):
             exit()
         except Exception:
             print(mov_orden)
-            print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
-            print('### ERROR AL MOVER ORDEN ###')
-            print('### ESPERANDO 30 SEGUNDOS ###')
-            time.sleep(30)
+            print_error('MOVER ORDEN')
 
 
 def historial_trades(c, n_order):
@@ -299,10 +281,7 @@ def historial_trades(c, n_order):
             exit()
         except Exception:
             print(trade_hist)
-            print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
-            print('### ERROR AL LEER HISTORIAL DE ORDENES ###')
-            print('### ESPERANDO 30 SEGUNDOS ###')
-            time.sleep(30)
+            print_error('LEER HISTORIAL DE ORDENES')
 
 
 def check_requirements():
@@ -312,11 +291,8 @@ def check_requirements():
         print('[ERROR] No Requests Module Found:\n\t Use "pip install requests" first.')
         exit(1)
 
-# PROGRAMA PRINCIPAL #####################################################################
-if __name__ == "__main__":
-    check_requirements()
-    global coins, API_key, Secret, _nonce, altstr
 
+def print_header():
     print('')
     print('     ****************************************************************')
     print('     ****************************************************************')
@@ -332,6 +308,14 @@ if __name__ == "__main__":
     print('')
     print('')
     print('')
+
+# PROGRAMA PRINCIPAL #####################################################################
+if __name__ == "__main__":
+    check_requirements()
+
+    global coins, API_key, Secret, _nonce, altstr
+
+    print_header()
 
     _nonce = int("{:.6f}".format(time.time()).replace('.', ''))
 
