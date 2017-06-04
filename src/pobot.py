@@ -131,8 +131,14 @@ def handle_order_not_closed_yet(nc, global_state, historia):
 def check_requirements():
     from pkgutil import iter_modules
     modules = set(x[1] for x in iter_modules())
-    if not 'requests' in modules:
-        cPrint.print_log('[ERROR] No Requests Module Found:\n\t Use "pip install requests" first.')
+    missing_modules = ""
+    required_modules = ['requests', 'jsonpickle']
+    for module in required_modules:
+        if not module in modules:
+            missing_modules += " " + module
+
+    if missing_modules != '':
+        cPrint.print_log('[ERROR] Missing Modules Found:\n\t Use "pip install' + missing_modules + '" first.')
         exit(1)
 
 
