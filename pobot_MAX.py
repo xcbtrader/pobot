@@ -594,7 +594,7 @@ while not finalizar_bot:
 			print('### CICLO PARA ' + c.n_alt + ' FINALIZADO CORRECTAMENTE ###')
 		else:
 			if c.tipo_operacion == 'SIN ORDEN':
-				if (c.percentChange >= margen_incremento_24h and c.lowestAsk <= (c.high24hr + c.low24hr) * margen_incrememto_act) or margen_incremento_24h == 0.0:
+				if (c.percentChange >= margen_incremento_24h and c.lowestAsk <= c.low24hr + ((c.high24hr - c.low24hr) * margen_incrememto_act)) or margen_incremento_24h == 0.0:
 					esperando_ticker()
 					num_last_orden2, last_compra2 = realizar_compra(c.n_alt, c.lowestAsk, saldo_inv)
 					if num_last_orden2 != '-1':
