@@ -419,7 +419,7 @@ try:
 	a_coins = a_c.split(';')
 	b_coins = b_c.split(';')
 	c_coins = c_c.split(';')
-	d_coins = c_c.split(';')
+	d_coins = d_c.split(';')
 	
 except KeyboardInterrupt:
 	exit()	
