@@ -266,6 +266,8 @@ def mover_orden(num_orden_cerrar, lowestAsk):
 		return '-1'
 
 def esperando_ticker():
+	global ticker_actualizado
+	
 	prime = True
 	while not ticker_actualizado:
 		if prime:
@@ -273,7 +275,7 @@ def esperando_ticker():
 			prime = False
 		time.sleep(10)
 
-def ordenes_abiertas(c):
+def ordenes_abiertas(c, num_last_orden):
 	err = True
 	while err:
 		try:
@@ -282,11 +284,13 @@ def ordenes_abiertas(c):
 			if len(open_orders) == 0:
 				return False
 			else:
-				return True
+				for op in open_orders:
+					if op['orderNumber'] == num_last_orden:
+						return True
+				return False
 		except KeyboardInterrupt:
 			exit()	
 		except Exception:
-			print(open_orders)
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL LEER LAS ORDENES ABIERTAS ###')
 			
@@ -594,7 +598,7 @@ while not finalizar_bot:
 			print('### CICLO PARA ' + c.n_alt + ' FINALIZADO CORRECTAMENTE ###')
 		else:
 			if c.tipo_operacion == 'SIN ORDEN':
-				if (c.percentChange >= margen_incremento_24h and c.lowestAsk <= c.low24hr + ((c.high24hr - c.low24hr) * margen_incrememto_act)) or margen_incremento_24h == 0.0:
+				if (c.percentChange >= margen_incremento_24h and c.lowestAsk <= (c.high24hr + c.low24hr) * margen_incrememto_act) or margen_incremento_24h == 0.0:
 					esperando_ticker()
 					num_last_orden2, last_compra2 = realizar_compra(c.n_alt, c.lowestAsk, saldo_inv)
 					if num_last_orden2 != '-1':
@@ -608,7 +612,7 @@ while not finalizar_bot:
 					print('-----------------------------------------------------------------------------------------------------------------')
 				
 			elif c.tipo_operacion == 'COMPRA':
-				if buscar_historial(c.n_alt, c.num_last_orden) and not ordenes_abiertas(c.n_alt):
+				if buscar_historial(c.n_alt, c.num_last_orden) and not ordenes_abiertas(c.n_alt, c.num_last_orden):
 					print('### ORDEN DE COMPRA NUM: ' + c.num_last_orden + ' PARA ' + c.n_alt + ' FINALIZADA CORRECTAMENTE ###')
 					esperando_ticker()
 					precio_venta = c.last_compra + (c.last_compra * c.margen)
@@ -636,7 +640,7 @@ while not finalizar_bot:
 						print('### ESPERANDO QUE SE CIERRE LA ORDEN DE ' + c.tipo_operacion + ' PARA ' + c.n_alt + ' ###')
 						
 			else:
-				if buscar_historial(c.n_alt, c.num_last_orden) and not ordenes_abiertas(c.n_alt):
+				if buscar_historial(c.n_alt, c.num_last_orden) and not ordenes_abiertas(c.n_alt, c.num_last_orden):
 					print('### ORDEN DE VENTA NUM: ' + c.num_last_orden + ' PARA ' + c.n_alt + ' FINALIZADA CORRECTAMENTE ###')
 					print('### FINALIZADO CICLO: ' + str(c.ciclo) + ' - BENEFICIO: ' + str(c.last_venta - c.last_compra) + ' ' + str(((c.last_venta * 100)/c.last_compra)-100) + '% ###')
 					c.tipo_operacion = 'SIN ORDEN'
