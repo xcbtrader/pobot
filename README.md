@@ -1,19 +1,19 @@
-# pobot
-Pobot - Bot para Poloniex Multi Coin 
+# pobot_MAX
+Pobot_MAX - Bot para Poloniex Multi Coin 
 
-Pobot es un bot autotrader en Multi Altcoin, que nos permite escoger entre 10 AltCoins diferentes, operar tanto en USDT_xxx como en BTC_xxx y definir para cada AltCoin el margen de beneficio que queremos. Este Bot está preparado para trabajar Python 3.x.
+Pobot_MAX es un bot autotrader en Multi Altcoin, que nos permite escoger entre 10 AltCoins diferentes, operar tanto en USDT_xxx, BTC_xxx, ETH_xxx y XMR_xxx y definir para cada AltCoin el margen de beneficio que queremos. Este Bot está preparado para trabajar bajo Python 3.x.
 
 Utilizarlo bajo vuestra responsabilidad !!!!
 
 No me hago responsable de posibles fallos, pérdidas o operaciones incorrectas que pueda realizar el Bot
 
-Antes de ejecutar el programa, hay que editar el fichero pobot.cfg y modificar la línea donde se pide los datos del API. Si no los tenemos creados, antes hay que ir a la web de Poloniex y crear una llave de API.
+Antes de ejecutar el programa, hay que editar el fichero pobot_MAX.cfg y modificar la línea donde se pide los datos del API. Si no los tenemos creados, antes hay que ir a la web de Poloniex y crear una llave de API.
 
 Para ejecutarlo poner:
 
 Para Python 3.x
 
-python3 pobot.py
+python3 pobot_MAX.py
 
 Una vez ejecutado, primero nos pedirá si queremos continuar con la última sesión creada, en caso contrario, nos pedirá, la moneda base a trabajar (BTC/USDT) el márgen de beneficio que queremos para cada Altcoin y la cantidad total de BTC/USDT que queremos invertir. Cuanto más grande sea el margen de beneficio escogido, tardará más en cerrar las operaciones, pero más beneficio tendremos. Si no queremos que el bot opera con alguna AltCoin, simplemente le ponemos margen 0 y ya está.
 
