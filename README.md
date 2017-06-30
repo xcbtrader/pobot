@@ -65,7 +65,9 @@ Datos adicionales que, en función de la opción escogida nos va a pedir el Bot:
 
 - margen de incremento de las ultimas 24h para entrar a invertir: este es el márgen de incremento que tiene la moneda en las últimas 24h. Valores recomendables de 1 a 10.
 
-- margen de incremento actual de la Alt para entrar a invertir: Este margen es complicado de entender, pero muy útil para no entrar en alts que están uy subidas de valor. Vamos a poner un ejemplo:
+- margen de incremento actual de la Alt para entrar a invertir: Este margen es complicado de entender, pero muy útil para no entrar en alts que están uy subidas de valor. 
+
+Vamos a poner un ejemplo:
 
 Alt USDT_BTC. Max 24h = 1100, Min 24h = 1000, Incremento 24h = 10%. Si le ponemos como valor 60% significa que sólo entrará a invertir si USDT_BTC tiene un valor inferior a: Min 24h + (Max 24h - Min 24h) * Margen/ 100 = 1000 + (1100 - 1000)* 60/100 = 1060
 
@@ -73,7 +75,7 @@ Esto significa que mientras el valor actual del par USDT_BTC esté por arriba de
 
 - Después nos pide el margen de beneficio, para todas las Alts, o para cada una. Este valor tiene que ser superior a 0.5, ya que sinó los fees de POLONIEX noscomerán el beneficio. Valores muy elevados harán que la orden no cierre casi nunca. Valores recomendados: de 1 a 5.
 
-Ya para finalizar, el bot nos pedirá el número de ciclos que va a durar el trader. Entendemos un CICLO como el proceso completo de que se cierre una orden de compra y su correspondiente orden de venta. Si estamos en la opción 6,los ciclos son pares de alts independientes. En las demás opciones, si operamos con 5 alts a la vez los ciclos no se incrementan hasta que no se hayan finalizado las ordenes de cada Alt. 
+- Ya para finalizar, el bot nos pedirá el número de ciclos que va a durar el trader. Entendemos un CICLO como el proceso completo de que se cierre una orden de compra y su correspondiente orden de venta. Si estamos en la opción 6,los ciclos son pares de alts independientes. En las demás opciones, si operamos con 5 alts a la vez los ciclos no se incrementan hasta que no se hayan finalizado las ordenes de cada Alt. 
 
 Evidentemente, para que el bot funcione, se necesita tenerlo siempre funcionando y una conexión a internet. Los datos los consulta cada 10 segundos, por lo que no consume ancho de banda.
 
