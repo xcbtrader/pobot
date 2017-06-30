@@ -63,11 +63,12 @@ def private_order(command, args={}):
 		except KeyboardInterrupt:
 			exit()	
 		except Exception:
-			print(ret)
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL EJECUTAR PRIVATE ORDER ' + command + ' ###')
-			print('### ESPERANDO 30 SEGUNDOS ###')
-			time.sleep(30)	
+			print('### ESPERANDO 10 SEGUNDOS ###')
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+			time.sleep(10)	
 	
 def public_order(command, args={}):
 
@@ -80,11 +81,12 @@ def public_order(command, args={}):
 		except KeyboardInterrupt:
 			exit()	
 		except Exception:
-			print(ret)
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL EJECUTAR PUBLIC ORDER ' + command + ' ###')
-			print('### ESPERANDO 30 SEGUNDOS ###')
-			time.sleep(30)
+			print('### ESPERANDO 10 SEGUNDOS ###')
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+			time.sleep(10)
 			
 def nonce():
 	global _nonce
@@ -100,11 +102,13 @@ def leer_ticker_full():
 		except KeyboardInterrupt:
 			exit()	
 		except Exception:
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL LEER TICKER ###')
-			print('### ESPERANDO 30 SEGUNDOS ###')
-			time.sleep(30)	
-
+			print('### ESPERANDO 10 SEGUNDOS ###')
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+			time.sleep(10)
+			
 def leer_balance(c):
 	err = True
 	while err:
@@ -118,11 +122,13 @@ def leer_balance(c):
 		except KeyboardInterrupt:
 			exit()	
 		except Exception:
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL LEER BALANCE ' + c + ' ###')
-			print('### ESPERANDO 30 SEGUNDOS ###')
-			time.sleep(30)
-
+			print('### ESPERANDO 10 SEGUNDOS ###')
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+			time.sleep(10)
+			
 def leer_balance_full():
 	err = True
 	while err:
@@ -132,18 +138,20 @@ def leer_balance_full():
 		except KeyboardInterrupt:
 			exit()	
 		except Exception:
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL LEER BALANCE ' + c + ' ###')
-			print('### ESPERANDO 30 SEGUNDOS ###')
-			time.sleep(30)
-
+			print('### ESPERANDO 10 SEGUNDOS ###')
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+			time.sleep(10)
+			
 def actualizar_ticker():
-	global l_ticker, coins_trader, ticker_actualizado, estadisticas
+	global l_ticker, coins_trader, ticker_actualizado, funcionamiento
 	
 	try:
 		l_ticker = leer_ticker_full()
 		ticker_actualizado = True
-		print('**-----------------------------------------------------------------------------------------------------------------**')
+		print('-----------------------------------------------------------------------------------------------------------------')
 		print('>>> FECHA TICKER: ' + time.strftime("%d/%m/%y") + ' ' + time.strftime("%H:%M:%S"))
 		p = 0
 		for c in coins_trader:
@@ -155,22 +163,34 @@ def actualizar_ticker():
 			c.lowestAsk = float(t['lowestAsk'])
 			c.highestBid = float(t['highestBid'])
 			c.last = float(t['last'])
-			print(c.n_alt + ' - Ciclo: ' + str(c.ciclo) + ' - (Max 24H: ' + str(c.high24hr) + ' , Min 24H: ' + str(c.low24hr) + ' , ' + str(round(100 * c.percentChange,3)) + ' %) -- (Compra: ' + str(c.lowestAsk) + ' , Last: ' + str(c.last) + ' , Venta: ' + str(c.highestBid) + ')')
-			
-			es = estadisticas[p].last
-			es.append(float(t['last']))
+			if funcionamiento == 6:
+				if c.tipo_operacion == 'COMPRA':
+					print(c.n_alt + ' - (Max 24H: ' + str(c.high24hr) + ' , Min 24H: ' + str(c.low24hr) + ' , ' + str(round(100 * c.percentChange,3)) + ' %) -- (Compra: ' + str(c.lowestAsk) + ' , Last: ' + str(c.last) + ' , Venta: ' + str(c.highestBid) + ' - PRECIO COMPRA: ' + str(c.last_compra) + ')')
+				elif c.tipo_operacion == 'VENTA':
+					print(c.n_alt + ' - (Max 24H: ' + str(c.high24hr) + ' , Min 24H: ' + str(c.low24hr) + ' , ' + str(round(100 * c.percentChange,3)) + ' %) -- (Compra: ' + str(c.lowestAsk) + ' , Last: ' + str(c.last) + ' , Venta: ' + str(c.highestBid) + ' - PRECIO VENTA: ' + str(c.last_venta) + ')')
+				else:
+					print(c.n_alt + ' - (Max 24H: ' + str(c.high24hr) + ' , Min 24H: ' + str(c.low24hr) + ' , ' + str(round(100 * c.percentChange,3)) + ' %) -- (Compra: ' + str(c.lowestAsk) + ' , Last: ' + str(c.last) + ' , Venta: ' + str(c.highestBid) +  ')')
+			else:
+				if c.tipo_operacion == 'COMPRA':
+					print(c.n_alt  + ' - Ciclo: ' + str(c.ciclo) +  ' - (Max 24H: ' + str(c.high24hr) + ' , Min 24H: ' + str(c.low24hr) + ' , ' + str(round(100 * c.percentChange,3)) + ' %) -- (Compra: ' + str(c.lowestAsk) + ' , Last: ' + str(c.last) + ' , Venta: ' + str(c.highestBid) + ' - PRECIO COMPRA: ' + str(c.last_compra) + ')')
+				elif c.tipo_operacion == 'VENTA':
+					print(c.n_alt  + ' - Ciclo: ' + str(c.ciclo) +  ' - (Max 24H: ' + str(c.high24hr) + ' , Min 24H: ' + str(c.low24hr) + ' , ' + str(round(100 * c.percentChange,3)) + ' %) -- (Compra: ' + str(c.lowestAsk) + ' , Last: ' + str(c.last) + ' , Venta: ' + str(c.highestBid) + ' - PRECIO VENTA: ' + str(c.last_venta) + ')')
+				else:
+					print(c.n_alt  + ' - Ciclo: ' + str(c.ciclo) +  ' - (Max 24H: ' + str(c.high24hr) + ' , Min 24H: ' + str(c.low24hr) + ' , ' + str(round(100 * c.percentChange,3)) + ' %) -- (Compra: ' + str(c.lowestAsk) + ' , Last: ' + str(c.last) + ' , Venta: ' + str(c.highestBid) +  ')')
 			
 			p += 1
-		print('**-----------------------------------------------------------------------------------------------------------------**')
+		print('-----------------------------------------------------------------------------------------------------------------')
 			
 	except KeyboardInterrupt:
 		exit()	
 	except Exception:
+		print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 		ticker_actualizado = False
 		print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
-		print('### ESPERANDO 30 SEGUNDOS ###')
-		time.sleep(30)
-
+		print('### ESPERANDO 10 SEGUNDOS ###')
+		time.sleep(10)
+		print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+		
 def actualizar_hist():
 	global trade_hist, hist_actualizado
 	
@@ -185,17 +205,19 @@ def actualizar_hist():
 			hist_actualizado = True
 			err = False
 			print('-----------------------------------------------------------------------------------------------------------------')
-			print('>>>> ' + time.strftime("%d/%m/%y") + ' ' + time.strftime("%H:%M:%S") + ' HISTORIAL DE ORDENES FINALIZADAS, ACTUALIZADO CORRECTAMENTE ')
+			print('>>> ' + time.strftime("%d/%m/%y") + ' ' + time.strftime("%H:%M:%S") + ' HISTORIAL DE ORDENES FINALIZADAS, ACTUALIZADO CORRECTAMENTE ')
 			print('-----------------------------------------------------------------------------------------------------------------')
 		except KeyboardInterrupt:
 			exit()	
 		except Exception:
 			hist_actualizado = False
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL LEER HISTORIAL DE ORDENES ###')
-			print('### ESPERANDO 30 SEGUNDOS ###')
-			time.sleep(30)						
-			
+			print('### ESPERANDO 10 SEGUNDOS ###')
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+			time.sleep(10)
+
 def buscar_historial(c, n_order):
 	global trade_hist, hist_actualizado
 
@@ -211,7 +233,6 @@ def buscar_historial(c, n_order):
 		
 	return False
 	
-
 def realizar_compra(c, lowestAsk, saldo_inv):
 	
 	precio_compra = lowestAsk
@@ -226,12 +247,16 @@ def realizar_compra(c, lowestAsk, saldo_inv):
 		exit()	
 	except Exception:
 		if make_order_buy['error'] == 'Unable to place post-only order at this price.':
+			print('**********************************************************************************************************************************')
 			print('### INTENTANDO PONER ORDEN DE COMPRA PARA ' + c + ' ###')
+			print('**********************************************************************************************************************************')
 		else:
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL CREAR ORDEN DE COMPRA ' + c + ' ###')
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 		return '-1', 0.0
-	
+
 def realizar_venta(c, precio_venta, saldo_inv):
 
 	try:	
@@ -244,26 +269,36 @@ def realizar_venta(c, precio_venta, saldo_inv):
 		exit()	
 	except Exception:
 		if make_order_sell['error'] == 'Unable to place post-only order at this price.':
+			print('**********************************************************************************************************************************')
 			print('### INTENTANDO PONER ORDEN DE VENTA PARA ' + c + ' ###')
+			print('**********************************************************************************************************************************')
 		else:
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL CREAR ORDEN DE VENTA ' + c + ' ###')
-		return '-1'
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+		return '-1'	
 
 def mover_orden(num_orden_cerrar, lowestAsk):	
 	try:	
 		mov_orden = private_order('moveOrder', {'orderNumber': str(num_orden_cerrar), 'rate': str(lowestAsk), 'postOnly': 1})
+		print('**********************************************************************************************************************************')
 		print('### MOVIDA ORDEN DE COMPRA: ' + str(num_orden_cerrar) +  ' AL NUEVO PRECIO: ' + str(lowestAsk) + ' CORRECTAMENTE')
+		print('**********************************************************************************************************************************')
 		return str(mov_orden['orderNumber'])
 	except KeyboardInterrupt:
 		exit()	
 	except Exception:
 		if mov_orden['error'] == 'Unable to place post-only order at this price.':
+			print('**********************************************************************************************************************************')
 			print('### INTENTANDO PONER ORDEN DE COMPRA A NUEVO PRECIO ###')
+			print('**********************************************************************************************************************************')
 		else:
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL MOVER ORDEN DE COMPRA ###')
-		return '-1'
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+		return '-1'	
 
 def esperando_ticker():
 	global ticker_actualizado
@@ -291,18 +326,22 @@ def ordenes_abiertas(c, num_last_orden):
 		except KeyboardInterrupt:
 			exit()	
 		except Exception:
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL LEER LAS ORDENES ABIERTAS ###')
+			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			
 def menu_funcionamiento():
 	funcionamiento = 0
-	while funcionamiento < 1 or funcionamiento > 7:	
+	while funcionamiento < 1 or funcionamiento > 6:	
 		print('')
 		print('Escoge el modo como operara Pobot_MAX')
 		print('    1-> Segun Margen de Incremento 24h (Con todas las Alts)')
 		print('    2-> Segun Margen de Incremento 24h (Escogiendo Manualmente las Alts)')
 		print('    3-> Version Antigua - Pone ordenes instantaneas (Con todas las Alts)')
 		print('    4-> Version Antigua - Pone ordenes instantaneas (Escogiendo Manualmente las Alts)')
+		print('    5-> Vamos a por el PUMP (Una sola Alt entrada Manualmente)')
+		print('    6-> Automatico. Escoge las mejores Alts para tradear en cada momento')
 		print('')
 		funcionamiento = int(input('Opcion: ? '))
 	return funcionamiento
@@ -321,35 +360,55 @@ def menu_alt():
 		alt = int(input('Opcion: ? '))
 	return alt
 	
+class info_alt_ok:
+	def __init__(self):
+		self.n_alt = ''
+		self.percentChange = 0.0
+		self.high24hr = 0.0
+		self.low24hr = 0.0
+		self.last = 0.0
+		
 def escoger_alts(num_max_alts_trader, working_alts, altstr, margen_incremento_24h, margen_incrememto_act):
 	alts_ok = []
-	err = True
-	while err:
-		ticker = leer_ticker_full()
-		n_tr = 1
-		print('')
+	alts_ok_def = []
+	ticker = leer_ticker_full()
+
+	for cn in working_alts:
+		t = ticker[altstr + '_' + cn]
+		if float(t['percentChange']) >= margen_incremento_24h and float(t['lowestAsk']) <= float(t['low24hr']) + (float(t['high24hr']) - float(t['low24hr'])) * margen_incrememto_act:
+			in_alt_ok = info_alt_ok()
+			in_alt_ok.n_alt = cn
+			in_alt_ok.percentChange = float(t['percentChange'])
+			in_alt_ok.high24hr = float(t['high24hr'])
+			in_alt_ok.low24hr = float(t['low24hr'])
+			in_alt_ok.last = float(t['last'])				
+			alts_ok.append(in_alt_ok)
+	
+	if len(alts_ok) == 0:
 		print('-----------------------------------------------------------------------------------------------------------------')
-		for cn in working_alts:
+		print('### NINGUNA NUEVA ALT CUMPLE CON LOS CRITERIOS DE TRADER ###')
+		print('-----------------------------------------------------------------------------------------------------------------')
+	else:
+		print('-----------------------------------------------------------------------------------------------------------------')
+		alts_ok = sorted(alts_ok, key=lambda objeto: objeto.percentChange, reverse = True)
+		n_tr = 1
+		for cn in alts_ok:
 			if n_tr <= num_max_alts_trader:
-				t = ticker[altstr + '_' + cn]
-				if (float(t['percentChange']) >= margen_incremento_24h and float(t['lowestAsk']) <= (float(t['high24hr']) + float(t['low24hr'])) * margen_incrememto_act):
-					alts_ok.append(cn)
-					print('### (' + str(n_tr) + ') AÑADIDO EL SIGUIENTE PAR AL BOT: ' + altstr + '_' + cn + ' ###')
-					n_tr += 1
-				else:
-					print(altstr + '_' + cn +  ' - (Max 24H: ' + t['high24hr'] + ' , Min 24H: ' + t['low24hr'] + ' , ' + str(round(100 * float(t['percentChange']),3)) + ' %) -- (Compra: ' + t['lowestAsk'] + ' , Last: ' + t['last'] + ' , Venta: ' + t['highestBid'] + ')')
+				print(altstr + '_' + cn.n_alt + ' -- Max 24H: ' + str(cn.high24hr) + ' - Min 24H: ' + str(cn.low24hr) + ' - Inc: ' + str(round(cn.percentChange * 100, 3)) + ' % - Last: ' + str(cn.last))
+				alts_ok_def.append(cn.n_alt)
+				n_tr +=1
+		print('-----------------------------------------------------------------------------------------------------------------')
+				
+	return alts_ok_def
 	
-		if len(alts_ok) == 0:
-			print('')
-			print('### ESPERANDO A TENER ALTS QUE CUMPLAN LOS CRITERIOS DE TRADER ###')
-			print('')
-			print('-----------------------------------------------------------------------------------------------------------------')
-			time.sleep(30)
-		else:
-			err = False
-	return alts_ok
-	
+def coincidencia(coins_trader, c):
+	encontrado = False
+	for co in coins_trader:
+		if c == co.n_alt:
+			encontrado = True
 			
+	return encontrado
+	
 class info_alt:
 	def __init__(self):
 		self.posicion = 0
@@ -368,28 +427,10 @@ class info_alt:
 		self.ciclo = 1
 		self.num_last_orden = ''
 		self.beneficio_total = 0.0
-		
-class estadist_alt:
-	def __init__(self):
-		self.n_alt = ''
-		self.fecha = ''
-		self.last = []
-		self.high24hr = []
-		self.low24hr = []
-		self.EMA1 = []
-		self.EMA2 = []
-		self.MACD = []
-		self.SMA = []
-		self.boll_band_max = []
-		self.boll_band_min = []
-		
-		
-	def actualizar_valor_ticker(self, n_alt, last):
-		pass
 
 # PROGRAMA PRINCIPAL ##########################################################
 
-global EMA1, EMA2, _nonce, altstr, coins, API_key, Secret, inicio_bot, l_ticker, coins_trader, ticker_actualizado, hist_actualizado, trade_hist, n_ticker, n_hist, estadisticas
+global EMA1, EMA2, _nonce, altstr, coins, API_key, Secret, inicio_bot, l_ticker, coins_trader, ticker_actualizado, hist_actualizado, trade_hist, n_ticker, n_hist
 
 print('')
 print('     **************************************************************************************')
@@ -428,9 +469,11 @@ try:
 except KeyboardInterrupt:
 	exit()	
 except Exception:
+	print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 	print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
+	print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 	exit()
-
+	
 saldo_inv = 0.0
 margen_incrememto_act = 0.0
 	
@@ -438,7 +481,7 @@ alt = menu_alt()
 working_alts = []
 
 print('')
-	
+
 if alt == 1:
 	altstr = 'USDT'
 	working_alts = a_coins
@@ -467,21 +510,21 @@ else:
 	while saldo_inv <= 0.0 or saldo_inv > saldoUSDT:
 		print('Entra saldo Maximo XMR a invertir: ' + str(saldoUSDT) + ' ' + altstr)
 		saldo_inv = float(input('Inversion:? '))
- 
+		
 funcionamiento = menu_funcionamiento()
 
 ticker = leer_ticker_full()
 
+if funcionamiento != 5:
+	print('')
+	print('-----------------------------------------------------------------------------------------------------------------')
+
+	for c in working_alts:
+		t = ticker[altstr + '_' + c]
+		print(altstr + '_' + c + ' -- Max 24H: ' + t['high24hr'] + ' - Min 24H: ' + t['low24hr'] + ' - Inc: ' + str(round(float(t['percentChange']) * 100, 3)) + ' % - Last: ' + t['last'])
+	print('-----------------------------------------------------------------------------------------------------------------')		
+
 print('')
-print('-----------------------------------------------------------------------------------------------------------------')
-
-for c in working_alts:
-	t = ticker[altstr + '_' + c]
-	print(altstr + '_' + c + ' -- Max 24H: ' + t['high24hr'] + ' - Min 24H: ' + t['low24hr'] + ' - Inc: ' + str(round(float(t['percentChange']) * 100, 3)) + ' % - Last: ' + t['last'])
-print('-----------------------------------------------------------------------------------------------------------------')		
-
-print('')
-
 
 coins = []
 a_margen = []
@@ -515,7 +558,8 @@ elif funcionamiento == 2:
 	margen_incrememto_act = margen_incrememto_act/100
 	
 	print('')
-	print('ENTRA LOS MARGENES PARA CADA ALTCOIN. SI PONEMOS 0 ESA ALTCOIN NO SE UTILIZA EN EL BOT')
+	print('Entra los margenes para cada Alt. Si ponemos 0 esa Alt no se utiliza en el bot')
+	print('')
 	
 	for cn in working_alts:
 		print('Margen para ' + cn + ' >=0.5 o 0 para No Altcoin : ? ')
@@ -539,7 +583,8 @@ elif funcionamiento == 3:
 elif funcionamiento == 4:
 	margen_incremento_24h = 0.0
 	print('')
-	print('ENTRA LOS MARGENES PARA CADA ALTCOIN. SI PONEMOS 0 ESA ALTCOIN NO SE UTILIZA EN EL BOT')
+	print('Entra los margenes para cada Alt. Si ponemos 0 esa Alt no se utiliza en el bot')
+	print('')
 	
 	for cn in working_alts:
 		print('Margen para ' + cn + ' >=0.5 o 0 para No Altcoin : ? ')
@@ -548,34 +593,69 @@ elif funcionamiento == 4:
 		if m >= 0.5:
 			coins.append(cn)
 			a_margen.append(m/100)	
-			
-print('')
-n_ticker = 0
-n_hist = 0
+elif funcionamiento == 5:
+	margen_incremento_24h = 0.0
+	print('')
+	al = input ('Entra la Alt para hacer PUMP: ')
+	al = al.upper()
+	alt = al.split('_')
+	if len(alt) == 1:
+		coins.append(alt[0])
+	else:
+		coins.append(alt[1])
+	
+	print('')
+	margen = 0.0
+	while margen <= 0.5:
+		margen2 = str(input('Entra el margen de beneficio para la Alt: ? ')) 
+		margen = float(margen2.replace(',','.'))
+	a_margen.append(margen/100)
+elif funcionamiento == 6:
+	print('')
+	margen_incremento_24h = float(input('Entra el margen de incremento de las ultimas 24h para entrar a invertir (0% -> 100%):? '))
+	margen_incremento_24h = margen_incremento_24h/100
+	
+	print('')
+	margen_incrememto_act = float(input('Entra el margen de incremento actual de la Alt para entrar a invertir (0% -> 100%):? '))
+	margen_incrememto_act = margen_incrememto_act/100
+	
+	print('')
+	num_max_alts_trader = 0
+	while num_max_alts_trader < 1 or num_max_alts_trader > len(working_alts):
+		num_max_alts_trader = int(input('Entra el Num. Max de Alts a tradear: ? '))
 
+	saldo_inv = saldo_inv / num_max_alts_trader
+	
+	print('')
+	margen = 0.0
+	while margen <= 0.5:
+		margen2 = str(input('Entra el margen de beneficio para todas las Alts (0.5% -> 100%): ? '))
+		margen = float(margen2.replace(',','.'))
+
+	margen = margen/100
+
+print('')
 ciclos = 0
 while ciclos < 1:
-	ciclos = int(input('Numero de ciclos de la Inversion:? '))
+	if funcionamiento == 6:
+		ciclos = int(input('Numero de ciclos total entre todas las Alts para la Inversion:? '))
+	else:
+		ciclos = int(input('Numero de ciclos de la Inversion:? '))
 		
 coins_trader = []
-estadisticas = []
-p = 0
-for c in coins:
-	ele_hist = estadist_alt()
-	fit_coin = info_alt()
-	fit_coin.posicion = p
-	fit_coin.n_alt = altstr + '_' + c
-	fit_coin.margen = a_margen[p]
-	coins_trader.append(fit_coin)
-	
-	ele_hist.n_alt =  altstr + '_' + c
-	ele_hist.fecha = time.strftime("%d/%m/%y") + ' ' + time.strftime("%H:%M:%S")
-	estadisticas.append(ele_hist)
-	
+
+if funcionamiento < 6:
+	p = 0
+	for c in coins:
+		fit_coin = info_alt()
+		fit_coin.posicion = p
+		fit_coin.n_alt = altstr + '_' + c
+		fit_coin.margen = a_margen[p]
+		coins_trader.append(fit_coin)
+
 	p += 1
-
-saldo_inv = saldo_inv / len(coins_trader)
-
+	saldo_inv = saldo_inv / len(coins_trader)
+	
 print('')
 print('### INICIANDO POBOT_MAX ###')
 print('')
@@ -587,19 +667,47 @@ act_tick = RepeatedTimer(30, actualizar_ticker)
 time.sleep(2)
 act_hist = RepeatedTimer(30, actualizar_hist)
 
-print('### ESPERANDO PRIMERA RECOGIDA DE DATOS DE POLONIEX ###')
+print('### ESPERANDO 60 seg PARA PRIMERA RECOGIDA DE DATOS DE POLONIEX ###')
 time.sleep(60)
-finalizar_bot = False
 pausa = 10
 
-while not finalizar_bot:
-	for c in coins_trader:
-		if c.ciclo > ciclos:
-			print('### CICLO PARA ' + c.n_alt + ' FINALIZADO CORRECTAMENTE ###')
-		else:
+if funcionamiento == 6:
+	ciclos_global = 1
+
+	primera = True
+	while ciclos_global <= ciclos:
+
+		if len(coins_trader) < num_max_alts_trader and (len(coins_trader) + ciclos_global) <= ciclos:
+			coins = escoger_alts(num_max_alts_trader, working_alts, altstr, margen_incremento_24h, margen_incrememto_act)
+
+			p = len(coins_trader)
+			for c in coins:
+				if p <= num_max_alts_trader and not coincidencia(coins_trader,altstr + '_' + c):
+					fit_coin = info_alt()
+					fit_coin.posicion = p
+					fit_coin.n_alt = altstr + '_' + c
+					fit_coin.margen = margen
+					coins_trader.append(fit_coin)
+					print('-----------------------------------------------------------------------------------------------------------------')
+					print('### (' + str(len(coins_trader)) + ') INCORPORADA LA SIGUIENTE ALT: ' + altstr + '_' + c + ' PARA TRADER ###')
+					print('-----------------------------------------------------------------------------------------------------------------')
+					p += 1
+		if primera:
+			ticker_actualizado = False
+			esperando_ticker()
+			primera = False
+	
+		alts_borrar = []
+		alts_no_cumplen = []
+		print('')
+		print('-----------------------------------------------------------------------------------------------------------------')
+		print('>>> CICLOS: ' + str(ciclos_global) + '/' + str(ciclos))
+		for c in coins_trader:
 			if c.tipo_operacion == 'SIN ORDEN':
-				if (c.percentChange >= margen_incremento_24h and c.lowestAsk <= (c.high24hr + c.low24hr) * margen_incrememto_act) or margen_incremento_24h == 0.0:
+				if c.lowestAsk == 0.0:
+					ticker_actualizado = False
 					esperando_ticker()
+				if c.percentChange >= margen_incremento_24h and  c.lowestAsk <= c.low24hr + ((c.high24hr - c.low24hr) * margen_incrememto_act):
 					num_last_orden2, last_compra2 = realizar_compra(c.n_alt, c.lowestAsk, saldo_inv)
 					if num_last_orden2 != '-1':
 						c.num_last_orden = num_last_orden2
@@ -607,13 +715,13 @@ while not finalizar_bot:
 						c.tipo_operacion = 'COMPRA'
 						time.sleep(pausa)			
 				else:
-					print('-----------------------------------------------------------------------------------------------------------------')
-					print('### ' + c.n_alt + ' ESPERANDO QUE SE DEN LAS CONDICIONES PARA NUEVA ORDEN DE COMPRA ###')
-					print('-----------------------------------------------------------------------------------------------------------------')
+					alts_no_cumplen.append(c)
 				
 			elif c.tipo_operacion == 'COMPRA':
 				if buscar_historial(c.n_alt, c.num_last_orden) and not ordenes_abiertas(c.n_alt, c.num_last_orden):
+					print('-----------------------------------------------------------------------------------------------------------------')
 					print('### ORDEN DE COMPRA NUM: ' + c.num_last_orden + ' PARA ' + c.n_alt + ' FINALIZADA CORRECTAMENTE ###')
+					print('-----------------------------------------------------------------------------------------------------------------')
 					esperando_ticker()
 					precio_venta = c.last_compra + (c.last_compra * c.margen)
 					if precio_venta < c.highestBid:
@@ -627,8 +735,10 @@ while not finalizar_bot:
 							c.tipo_operacion = 'VENTA'
 							time.sleep(pausa)						
 					else:
+						print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 						print('### ERROR. SALDO INSUFICIENTE EN ' + c.n_alt + ' PARA REALIZAR LA VENTA ###')
 						print('### ESPERANDO NUEVO SALDO ###')
+						print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 				else:
 					if c.lowestAsk > (c.last_compra + (c.last_compra * 0.01)):
 						mv_num_orden = mover_orden(c.num_last_orden, c.lowestAsk)
@@ -637,39 +747,138 @@ while not finalizar_bot:
 							c.num_last_orden = mv_num_orden
 							time.sleep(pausa)
 					else:
-						print('### ESPERANDO QUE SE CIERRE LA ORDEN DE ' + c.tipo_operacion + ' PARA ' + c.n_alt + ' ###')
-						
+						print('-----------------------------------------------------------------------------------------------------------------')
+						print('### ESPERANDO QUE SE CIERRE LA ORDEN ' + c.num_last_orden + ' DE ' + c.tipo_operacion + ' PARA ' + c.n_alt + ' ###')
+						print('-----------------------------------------------------------------------------------------------------------------')
 			else:
 				if buscar_historial(c.n_alt, c.num_last_orden) and not ordenes_abiertas(c.n_alt, c.num_last_orden):
+					print('-----------------------------------------------------------------------------------------------------------------')
 					print('### ORDEN DE VENTA NUM: ' + c.num_last_orden + ' PARA ' + c.n_alt + ' FINALIZADA CORRECTAMENTE ###')
-					print('### FINALIZADO CICLO: ' + str(c.ciclo) + ' - BENEFICIO: ' + str(c.last_venta - c.last_compra) + ' ' + str(((c.last_venta * 100)/c.last_compra)-100) + '% ###')
-					c.tipo_operacion = 'SIN ORDEN'
-					c.beneficio_total += (c.last_venta - c.last_compra)
-					c.num_last_orden = ''
-					c.ciclo +=1
+					print('-----------------------------------------------------------------------------------------------------------------')
+					alts_borrar.append(c)
+					ciclos_global +=1
 				else:
-					print('### ESPERANDO QUE SE CIERRE LA ORDEN DE ' + c.tipo_operacion + ' PARA ' + c.n_alt + ' ###')
+					print('-----------------------------------------------------------------------------------------------------------------')
+					print('### ESPERANDO QUE SE CIERRE LA ORDEN ' + c.num_last_orden + ' DE ' + c.tipo_operacion + ' PARA ' + c.n_alt + ' ###')
+					print('-----------------------------------------------------------------------------------------------------------------')
+	
+		if len(alts_borrar) > 0:
+			print('-----------------------------------------------------------------------------------------------------------------')
+			for al in alts_borrar:
+				print('### QUITANDO '+ al.n_alt + ' - PROCESO DE TRADER COMPLETADO CON EXITO ###')
+				coins_trader.remove(al)
+			print('-----------------------------------------------------------------------------------------------------------------')
+
+		if len(alts_no_cumplen) > 0:
+			print('-----------------------------------------------------------------------------------------------------------------')
+			for al in alts_no_cumplen:
+				print('### QUITANDO '+ al.n_alt + ' POR NO CUMPLIR CON LOS PARAMETROS DE TRADER ###')
+				coins_trader.remove(al)
+			print('-----------------------------------------------------------------------------------------------------------------')
+	
+		time.sleep(pausa)
+
 				
-	time.sleep(pausa)
+	act_tick.stop()
+	act_hist.stop()
 
-	f = 0
+	print('')
+	print('###############################################################')
+	print('#########  POBOT_MAX  FINALIZADO   CORRECTAMENTE    ###########')
+	print('###############################################################')
+	print('')
+	
+else:
+	finalizar_bot = False
+	while not finalizar_bot:
+		for c in coins_trader:
+			if c.ciclo > ciclos:
+				print('### CICLO PARA ' + c.n_alt + ' FINALIZADO CORRECTAMENTE ###')
+			else:
+				if c.tipo_operacion == 'SIN ORDEN':
+					if (c.percentChange >= margen_incremento_24h and c.lowestAsk <= (c.high24hr + c.low24hr) * margen_incrememto_act) or margen_incremento_24h == 0.0:
+						esperando_ticker()
+						num_last_orden2, last_compra2 = realizar_compra(c.n_alt, c.lowestAsk, saldo_inv)
+						if num_last_orden2 != '-1':
+							c.num_last_orden = num_last_orden2
+							c.last_compra = last_compra2
+							c.tipo_operacion = 'COMPRA'
+							time.sleep(pausa)			
+					else:
+						print('-----------------------------------------------------------------------------------------------------------------')
+						print('### ' + c.n_alt + ' ESPERANDO QUE SE DEN LAS CONDICIONES PARA NUEVA ORDEN DE COMPRA ###')
+						print('-----------------------------------------------------------------------------------------------------------------')
+				
+				elif c.tipo_operacion == 'COMPRA':
+					if buscar_historial(c.n_alt, c.num_last_orden) and not ordenes_abiertas(c.n_alt, c.num_last_orden):
+						print('-----------------------------------------------------------------------------------------------------------------')
+						print('### ORDEN DE COMPRA NUM: ' + c.num_last_orden + ' PARA ' + c.n_alt + ' FINALIZADA CORRECTAMENTE ###')
+						print('-----------------------------------------------------------------------------------------------------------------')
+						esperando_ticker()
+						precio_venta = c.last_compra + (c.last_compra * c.margen)
+						if precio_venta < c.highestBid:
+							precio_venta = c.highestBid
+						saldo_inv_alt = leer_balance(c.n_alt)
+						if saldo_inv_alt > 0:
+							num_last_orden2 = realizar_venta(c.n_alt, precio_venta, saldo_inv_alt)
+							if num_last_orden2 != '-1':
+								c.num_last_orden = num_last_orden2
+								c.last_venta = precio_venta
+								c.tipo_operacion = 'VENTA'
+								time.sleep(pausa)						
+						else:
+							print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+							print('### ERROR. SALDO INSUFICIENTE EN ' + c.n_alt + ' PARA REALIZAR LA VENTA ###')
+							print('### ESPERANDO NUEVO SALDO ###')
+							print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+					else:
+						if c.lowestAsk > (c.last_compra + (c.last_compra * 0.01)):
+							mv_num_orden = mover_orden(c.num_last_orden, c.lowestAsk)
+							if mv_num_orden != '-1':
+								c.last_compra = c.lowestAsk
+								c.num_last_orden = mv_num_orden
+								time.sleep(pausa)
+						else:
+							print('-----------------------------------------------------------------------------------------------------------------')
+							print('### ESPERANDO QUE SE CIERRE LA ORDEN DE ' + c.tipo_operacion + ' PARA ' + c.n_alt + ' ###')
+							print('-----------------------------------------------------------------------------------------------------------------')
+				else:
+					if buscar_historial(c.n_alt, c.num_last_orden) and not ordenes_abiertas(c.n_alt, c.num_last_orden):
+						print('-----------------------------------------------------------------------------------------------------------------')
+						print('### ORDEN DE VENTA NUM: ' + c.num_last_orden + ' PARA ' + c.n_alt + ' FINALIZADA CORRECTAMENTE ###')
+						print('-----------------------------------------------------------------------------------------------------------------')
+						print('-----------------------------------------------------------------------------------------------------------------')
+						print('### FINALIZADO CICLO: ' + str(c.ciclo) + ' - BENEFICIO: ' + str(c.last_venta - c.last_compra) + ' ' + str(((c.last_venta * 100)/c.last_compra)-100) + '% ###')
+						print('-----------------------------------------------------------------------------------------------------------------')
+						c.tipo_operacion = 'SIN ORDEN'
+						c.beneficio_total += (c.last_venta - c.last_compra)
+						c.num_last_orden = ''
+						c.ciclo +=1
+					else:
+						print('-----------------------------------------------------------------------------------------------------------------')
+						print('### ESPERANDO QUE SE CIERRE LA ORDEN DE ' + c.tipo_operacion + ' PARA ' + c.n_alt + ' ###')
+						print('-----------------------------------------------------------------------------------------------------------------')
+				
+		time.sleep(pausa)
+
+		f = 0
+		for c in coins_trader:
+			if c.ciclo > ciclos:
+				f +=1
+		if f == len(coins_trader):
+			finalizar_bot = True
+		
+		
+	act_tick.stop()
+	act_hist.stop()
+
+	print('')
+	print('###############################################################')
+	print('#########  POBOT_MAX  FINALIZADO   CORRECTAMENTE    ###########')
+	print('###############################################################')
+	print('')
+	print('Ejecutados ' + str(ciclos) + ' ciclos para ' + altstr)
+	print('Para las siguientes AltCoins:')
 	for c in coins_trader:
-		if c.ciclo > ciclos:
-			f +=1
-	if f == len(coins_trader):
-		finalizar_bot = True
-		
-		
-act_tick.stop()
-act_hist.stop()
-
-print('')
-print('###############################################################')
-print('#########  POBOT_MAX  FINALIZADO   CORRECTAMENTE    ###########')
-print('###############################################################')
-print('')
-print('Ejecutados ' + str(ciclos) + ' ciclos para ' + altstr)
-print('Para las siguientes AltCoins:')
-for c in coins_trader:
-	print(c.n_alt + ' -- Beneficio Total: ' + str(c.beneficio_total))
-print('###############################################################')
+		print(c.n_alt + ' -- Beneficio Total: ' + str(c.beneficio_total))
+	print('###############################################################')
