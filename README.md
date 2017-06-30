@@ -93,4 +93,4 @@ xcbtrader ...
 
 Dirección de donaciones: 1Ec5rcFuH2VTMwxVfNuFeE7WJ121jQ6GYu
 
-Enlace del grupo de TELEGRAM:1Ec5rcFuH2VTMwxVfNuFeE7WJ121jQ6GYu
+Enlace del grupo de TELEGRAM:https://t.me/joinchat/AAAAAELwarzwaE1U7fMGpA
