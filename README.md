@@ -79,7 +79,7 @@ Esto significa que mientras el valor actual del par USDT_BTC esté por arriba de
 
 Evidentemente, para que el bot funcione, se necesita tenerlo siempre funcionando y una conexión a internet. Los datos los consulta cada 10 segundos, por lo que no consume ancho de banda.
 
-Para finalizar el proceso, simplemente apretar CTRL + c. Si lo cerramos así, tendremos que ir a POLONIEX y cerrar manualmente las órdenes que queden abiertas. (Esto puede provocar pérdidas)
+El bot finalizará cuando se finalicen todos los ciclos. Para finalizar el bot de forma manual (NO RECOMENDABLE), simplemente apretar CTRL + c. Si lo cerramos así, tendremos que ir a POLONIEX y cerrar manualmente las órdenes que queden abiertas. (Esto puede provocar pérdidas)
 
 NOTA:
 
