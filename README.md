@@ -93,6 +93,14 @@ Espero que este bot, realizado de forma altruista para que todos podamos tener l
 
 xcbtrader ...
 
+-------------------------------------------------------------------------------------------------------------------------
+
 Dirección de donaciones: 1Ec5rcFuH2VTMwxVfNuFeE7WJ121jQ6GYu
 
-Enlace del grupo de TELEGRAM:https://t.me/joinchat/AAAAAELwarzwaE1U7fMGpA
+Enlace del grupo de TELEGRAM: https://t.me/joinchat/AAAAAELwarzwaE1U7fMGpA
+
+Enlace a foro-ptc: https://www.foro-ptc.com/cryptomonedas-138/estrategia-de-inversia-n-poloniex-pingpong-173997/
+
+Enlace a BitcoinTalk: https://bitcointalk.org/index.php?topic=1863246.0
+
+--------------------------------------------------------------------------------------------------------------------------
