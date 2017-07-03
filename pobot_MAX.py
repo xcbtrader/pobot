@@ -279,11 +279,11 @@ def realizar_venta(c, precio_venta, saldo_inv):
 			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 		return '-1'	
 
-def mover_orden(num_orden_cerrar, lowestAsk):	
+def mover_orden(num_orden_cerrar, lowestAsk, tipo):	
 	try:	
 		mov_orden = private_order('moveOrder', {'orderNumber': str(num_orden_cerrar), 'rate': str(lowestAsk), 'postOnly': 1})
 		print('**********************************************************************************************************************************')
-		print('### MOVIDA ORDEN DE COMPRA: ' + str(num_orden_cerrar) +  ' AL NUEVO PRECIO: ' + str(lowestAsk) + ' CORRECTAMENTE')
+		print('### MOVIDA ORDEN DE ' + tipo + ': ' + str(num_orden_cerrar) +  ' AL NUEVO PRECIO: ' + str(lowestAsk) + ' CORRECTAMENTE')
 		print('**********************************************************************************************************************************')
 		return str(mov_orden['orderNumber'])
 	except KeyboardInterrupt:
@@ -291,12 +291,12 @@ def mover_orden(num_orden_cerrar, lowestAsk):
 	except Exception:
 		if mov_orden['error'] == 'Unable to place post-only order at this price.':
 			print('**********************************************************************************************************************************')
-			print('### INTENTANDO PONER ORDEN DE COMPRA A NUEVO PRECIO ###')
+			print('### INTENTANDO PONER ORDEN DE ' + tipo + ' A NUEVO PRECIO ###')
 			print('**********************************************************************************************************************************')
 		else:
 			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
-			print('### ERROR AL MOVER ORDEN DE COMPRA ###')
+			print('### ERROR AL MOVER ORDEN DE ' + tipo + ' ###')
 			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 		return '-1'	
 
@@ -620,6 +620,10 @@ elif funcionamiento == 6:
 	margen_incrememto_act = margen_incrememto_act/100
 	
 	print('')
+	stop_loss = float(input('Entra el margen de perdidas aceptado (0 no se utiliza):? '))
+	stop_loss = stop_loss/100
+	
+	print('')
 	num_max_alts_trader = 0
 	while num_max_alts_trader < 1 or num_max_alts_trader > len(working_alts):
 		num_max_alts_trader = int(input('Entra el Num. Max de Alts a tradear: ? '))
@@ -674,6 +678,9 @@ pausa = 10
 if funcionamiento == 6:
 	ciclos_global = 1
 
+	total_beneficio = 0.0
+	n_ciclos_bene = 0
+	n_ciclos_perd = 0
 	primera = True
 	while ciclos_global <= ciclos:
 
@@ -701,7 +708,7 @@ if funcionamiento == 6:
 		alts_no_cumplen = []
 		print('')
 		print('-----------------------------------------------------------------------------------------------------------------')
-		print('>>> CICLOS: ' + str(ciclos_global) + '/' + str(ciclos))
+		print('>>> CICLOS: ' + str(ciclos_global) + '/' + str(ciclos) + ' -- Tot. Ciclos Benef: ' + str(n_ciclos_bene) + ' - Tot. Ciclos Perd: ' + str(n_ciclos_perd) + ' -- Beneficio: ' + str(total_beneficio))
 		for c in coins_trader:
 			if c.tipo_operacion == 'SIN ORDEN':
 				if c.lowestAsk == 0.0:
@@ -741,7 +748,7 @@ if funcionamiento == 6:
 						print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 				else:
 					if c.lowestAsk > (c.last_compra + (c.last_compra * 0.01)):
-						mv_num_orden = mover_orden(c.num_last_orden, c.lowestAsk)
+						mv_num_orden = mover_orden(c.num_last_orden, c.lowestAsk, c.tipo_operacion)
 						if mv_num_orden != '-1':
 							c.last_compra = c.lowestAsk
 							c.num_last_orden = mv_num_orden
@@ -755,12 +762,28 @@ if funcionamiento == 6:
 					print('-----------------------------------------------------------------------------------------------------------------')
 					print('### ORDEN DE VENTA NUM: ' + c.num_last_orden + ' PARA ' + c.n_alt + ' FINALIZADA CORRECTAMENTE ###')
 					print('-----------------------------------------------------------------------------------------------------------------')
+					
+					if c.last_venta - c.last_compra > 0:
+						n_ciclos_bene +=1
+					else:
+						n_ciclos_perd +=1
+						
+					total_beneficio += (c.last_venta - c.last_compra)
+	
 					alts_borrar.append(c)
 					ciclos_global +=1
 				else:
-					print('-----------------------------------------------------------------------------------------------------------------')
-					print('### ESPERANDO QUE SE CIERRE LA ORDEN ' + c.num_last_orden + ' DE ' + c.tipo_operacion + ' PARA ' + c.n_alt + ' ###')
-					print('-----------------------------------------------------------------------------------------------------------------')
+					if stop_loss > 0.0:
+						if c.highestBid <= c.last_compra - (c.last_compra * stop_loss):
+							mv_num_orden = mover_orden(c.num_last_orden, c.highestBid, c.tipo_operacion)
+							if mv_num_orden != '-1':
+								c.last_venta = c.highestBid
+								c.num_last_orden = mv_num_orden
+								time.sleep(pausa)
+					else:
+						print('-----------------------------------------------------------------------------------------------------------------')
+						print('### ESPERANDO QUE SE CIERRE LA ORDEN ' + c.num_last_orden + ' DE ' + c.tipo_operacion + ' PARA ' + c.n_alt + ' ###')
+						print('-----------------------------------------------------------------------------------------------------------------')
 	
 		if len(alts_borrar) > 0:
 			print('-----------------------------------------------------------------------------------------------------------------')
