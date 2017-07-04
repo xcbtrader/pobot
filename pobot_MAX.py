@@ -421,7 +421,9 @@ class info_alt:
 		self.percentChange = 0.0
 		self.baseVolume = 0.0
 		self.last_compra = 0.0
+		self.inv_last_compra = 0.0
 		self.last_venta = 0.0
+		self.inv_last_venta = 0.0
 		self.tipo_operacion = 'SIN ORDEN'  # Valores: 'Sin Orden', 'Compra', 'Venta'
 		self.margen = 0.0
 		self.ciclo = 1
@@ -450,8 +452,15 @@ print('')
 
 _nonce = int("{:.6f}".format(time.time()).replace('.', ''))
 
+if(len(sys.argv) == 3) and sys.argv[1] == '-c':
+	fichero = sys.argv[2]
+	print('### CARGANDO FICHERO ' + fichero + ' CON LA CONFIGURACION PERSONALIZADA')
+else:
+	fichero = 'pobot_MAX.cfg'
+	print('### CARGANDO FICHERO ' + fichero + ' CON LA CONFIGURACION ESTANDAR')
+
 try:
-	configuracion = open('pobot_MAX.cfg', 'r')
+	configuracion = open(fichero, 'r')
 	config = configuracion.readlines()
 	t = config[0].split(';')
 	API_key = t[1].strip()
@@ -470,10 +479,11 @@ except KeyboardInterrupt:
 	exit()	
 except Exception:
 	print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-	print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
+	print('### ERROR AL ABRIR FICHERO DE CONFIGURACION : ' + fichero)
 	print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+	time.sleep(10)
 	exit()
-	
+
 saldo_inv = 0.0
 margen_incrememto_act = 0.0
 	
@@ -720,6 +730,7 @@ if funcionamiento == 6:
 						c.num_last_orden = num_last_orden2
 						c.last_compra = last_compra2
 						c.tipo_operacion = 'COMPRA'
+						c.inv_last_compra = saldo_inv
 						time.sleep(pausa)			
 				else:
 					alts_no_cumplen.append(c)
@@ -740,6 +751,7 @@ if funcionamiento == 6:
 							c.num_last_orden = num_last_orden2
 							c.last_venta = precio_venta
 							c.tipo_operacion = 'VENTA'
+							c.inv_last_venta = saldo_inv_alt
 							time.sleep(pausa)						
 					else:
 						print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
@@ -768,7 +780,7 @@ if funcionamiento == 6:
 					else:
 						n_ciclos_perd +=1
 						
-					total_beneficio += (c.last_venta - c.last_compra)
+					total_beneficio += (c.last_venta * c.inv_last_venta) - c.inv_last_compra
 	
 					alts_borrar.append(c)
 					ciclos_global +=1
@@ -810,6 +822,9 @@ if funcionamiento == 6:
 	print('#########  POBOT_MAX  FINALIZADO   CORRECTAMENTE    ###########')
 	print('###############################################################')
 	print('')
+	print('')
+	print(' TOTAL BENEFICIO: ' + str(total_beneficio))
+	print('')
 	
 else:
 	finalizar_bot = False
@@ -826,6 +841,7 @@ else:
 							c.num_last_orden = num_last_orden2
 							c.last_compra = last_compra2
 							c.tipo_operacion = 'COMPRA'
+							c.inv_last_compra = saldo_inv
 							time.sleep(pausa)			
 					else:
 						print('-----------------------------------------------------------------------------------------------------------------')
@@ -848,6 +864,7 @@ else:
 								c.num_last_orden = num_last_orden2
 								c.last_venta = precio_venta
 								c.tipo_operacion = 'VENTA'
+								c.inv_last_venta = saldo_inv_alt
 								time.sleep(pausa)						
 						else:
 							print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
@@ -871,10 +888,10 @@ else:
 						print('### ORDEN DE VENTA NUM: ' + c.num_last_orden + ' PARA ' + c.n_alt + ' FINALIZADA CORRECTAMENTE ###')
 						print('-----------------------------------------------------------------------------------------------------------------')
 						print('-----------------------------------------------------------------------------------------------------------------')
-						print('### FINALIZADO CICLO: ' + str(c.ciclo) + ' - BENEFICIO: ' + str(c.last_venta - c.last_compra) + ' ' + str(((c.last_venta * 100)/c.last_compra)-100) + '% ###')
+						print('### FINALIZADO CICLO: ' + str(c.ciclo) + ' - BENEFICIO: ' + str((c.last_venta * c.inv_last_venta) - c.inv_last_compra) + ' ' + str(((c.last_venta * c.inv_last_venta * 100)/c.inv_last_compra)-100) + '% ###')
 						print('-----------------------------------------------------------------------------------------------------------------')
 						c.tipo_operacion = 'SIN ORDEN'
-						c.beneficio_total += (c.last_venta - c.last_compra)
+						c.beneficio_total += (c.last_venta * c.inv_last_venta) - c.inv_last_compra
 						c.num_last_orden = ''
 						c.ciclo +=1
 					else:
