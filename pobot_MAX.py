@@ -792,6 +792,10 @@ if funcionamiento == 6:
 								c.last_venta = c.highestBid
 								c.num_last_orden = mv_num_orden
 								time.sleep(pausa)
+						else:
+							print('-----------------------------------------------------------------------------------------------------------------')
+							print('### ESPERANDO QUE SE CIERRE LA ORDEN ' + c.num_last_orden + ' DE ' + c.tipo_operacion + ' PARA ' + c.n_alt + ' ###')
+							print('-----------------------------------------------------------------------------------------------------------------')
 					else:
 						print('-----------------------------------------------------------------------------------------------------------------')
 						print('### ESPERANDO QUE SE CIERRE LA ORDEN ' + c.num_last_orden + ' DE ' + c.tipo_operacion + ' PARA ' + c.n_alt + ' ###')
