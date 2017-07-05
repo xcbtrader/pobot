@@ -11,6 +11,8 @@ El Bot es gratuito, hoy y siempre, pero para la gente que lo usa y está sacando
 
 Antes de ejecutar el programa, hay que editar el fichero pobot_MAX.cfg y modificar la línea donde se pide los datos del API. Si no los tenemos creados, antes hay que ir a la web de Poloniex y crear una llave de API.
 
+También podemos tener varios ficheros con diferentes configuraciones (en todas ellas, en las 2 primeras líneas hay que incluir las llaves API de Poloniex.
+
 Para ejecutarlo poner:
 
 WINDOWS:
@@ -21,13 +23,21 @@ Ir al directorio donde hemos grabado los ficheros pobot_MAX.py y pobot_MAX.cfg (
 
 ejecutar el bot con python3 pobot_MAX.py o python pobot_MAX.py (depende de la configuración de cada ordenador)
 
+Si tenemos un fichero de configuración propio, por ejemplo con nombre miconfiguracion.cfg, para ejecutarlo pondremos:
+
+python3 pobot_MAX.py -c miconfiguracion.cfg
+
 LINUX:
 
 Abrir la cónsola de linux y mediante la instrucción cd ir al directorio donde tenemos el ichero pobot_MAX.py
 
 ejecutar el bot con python3 pobot_MAX.py o python pobot_MAX.py (depende de la configuración de cada ordenador)
 
-Si da error seguramente es porque no tenemos correctamente la libreria requests o la clave API no la hemos puesto.
+Si tenemos un fichero de configuración propio, por ejemplo con nombre miconfiguracion.cfg, para ejecutarlo pondremos:
+
+python3 pobot_MAX.py -c miconfiguracion.cfg
+
+Si da error seguramente es porqué no tenemos correctamente la libreria requests o la clave API no la hemos puesto, o hemos editado el fichero con NOTEPAD, y nos a juntado las líneas. El fichero de configuració tienen que tener 6 líneas.
 
 Una vez ejecutado, nos aparecerá un menú para escoger el tipo de Alt con el que vamos a operar y el saldo que tenemos en POLONIEX para cada una: USDT, BTC, ETH, XMR.
 
@@ -61,6 +71,8 @@ Versión antigua de pobot...escogiendo manualmente las alts. NO RECOMENDABLE
 
 Esta opción es novedad total, y es la más inteligente de todas, ya que busca en cada momento las alts que tienen un margen mejor, y entra a operar con ellas.
 
+Aparte, esta opción nos permite definir un margen de pérdidas (si el valor de la Alt, baja ese margen del precio de compra, la venderá y así minimizamos las pérdidas)
+
 Datos adicionales que, en función de la opción escogida nos va a pedir el Bot:
 
 - margen de incremento de las ultimas 24h para entrar a invertir: este es el márgen de incremento que tiene la moneda en las últimas 24h. Valores recomendables de 1 a 10.
@@ -83,7 +95,7 @@ El bot finalizará cuando se finalicen todos los ciclos. Para finalizar el bot d
 
 NOTA:
 
-Por configuración y forma de trabajar del bot, este no puede genrar nunca pérdidas: El pone una orden de compra, y cuando se cierra pone una orden de venta para la misma alt al precio de compra + margen de beneficio.
+Por configuración y forma de trabajar del bot, este no puede genrar nunca pérdidas (a no ser que en la opción 6 le pongamos un márgen de pérdidas más grande de 0): El pone una orden de compra, y cuando se cierra pone una orden de venta para la misma alt al precio de compra + margen de beneficio.
 
 Sólo se generarán pérdidas si, por impaciencia se cierra manualmente una orden que está tardando en cerrarse.
 
