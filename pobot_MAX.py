@@ -242,6 +242,7 @@ def realizar_compra(c, lowestAsk, saldo_inv):
 		print('**********************************************************************************************************************************')
 		print('*** ' + c + ' CREADA ORDEN DE COMPRA NUM ' + make_order_buy['orderNumber'] + ' - PRECIO: ' + str(precio_compra) + ' - INVERSION: ' + str(saldo_inv) + ' ***')
 		print('**********************************************************************************************************************************')
+		guardar_historial(c + ';CREADA ORDEN DE COMPRA NUM ' + make_order_buy['orderNumber'] + ';PRECIO: ' + str(precio_compra) + ';INVERSION: ' + str(saldo_inv))
 		return make_order_buy['orderNumber'], precio_compra
 	except KeyboardInterrupt:
 		exit()	
@@ -250,11 +251,13 @@ def realizar_compra(c, lowestAsk, saldo_inv):
 			print('**********************************************************************************************************************************')
 			print('### INTENTANDO PONER ORDEN DE COMPRA PARA ' + c + ' ###')
 			print('**********************************************************************************************************************************')
+			guardar_historial('INTENTANDO PONER ORDEN DE COMPRA PARA ' + c)
 		else:
 			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL CREAR ORDEN DE COMPRA ' + c + ' ###')
 			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+			guardar_historial('ERROR AL CREAR ORDEN DE COMPRA ' + c + ';' + sys.exc_info()[1])
 		return '-1', 0.0
 
 def realizar_venta(c, precio_venta, saldo_inv):
@@ -264,6 +267,7 @@ def realizar_venta(c, precio_venta, saldo_inv):
 		print('**********************************************************************************************************************************')
 		print('*** ' + c + ' CREADA ORDEN DE VENTA NUM ' + make_order_sell['orderNumber'] + ' - PRECIO: ' + str(precio_venta) + ' - IVERSION: ' + str(saldo_inv) + ' ***')
 		print('**********************************************************************************************************************************')
+		guardar_historial(c + ';CREADA ORDEN DE VENTA NUM ' + make_order_sell['orderNumber'] + ';PRECIO: ' + str(precio_venta) + ';IVERSION: ' + str(saldo_inv))
 		return make_order_sell['orderNumber']
 	except KeyboardInterrupt:
 		exit()	
@@ -272,11 +276,13 @@ def realizar_venta(c, precio_venta, saldo_inv):
 			print('**********************************************************************************************************************************')
 			print('### INTENTANDO PONER ORDEN DE VENTA PARA ' + c + ' ###')
 			print('**********************************************************************************************************************************')
+			guardar_historial('INTENTANDO PONER ORDEN DE VENTA PARA ' + c)
 		else:
 			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL CREAR ORDEN DE VENTA ' + c + ' ###')
 			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+			guardar_historial('ERROR AL CREAR ORDEN DE VENTA ' + c + ';' + sys.exc_info()[1])
 		return '-1'	
 
 def mover_orden(num_orden_cerrar, lowestAsk, tipo):	
@@ -285,6 +291,7 @@ def mover_orden(num_orden_cerrar, lowestAsk, tipo):
 		print('**********************************************************************************************************************************')
 		print('### MOVIDA ORDEN DE ' + tipo + ': ' + str(num_orden_cerrar) +  ' AL NUEVO PRECIO: ' + str(lowestAsk) + ' CORRECTAMENTE')
 		print('**********************************************************************************************************************************')
+		guardar_historial('MOVIDA ORDEN DE ' + tipo + ';NUM ORDER: ' + str(num_orden_cerrar) +  ';AL NUEVO PRECIO: ' + str(lowestAsk))
 		return str(mov_orden['orderNumber'])
 	except KeyboardInterrupt:
 		exit()	
@@ -293,11 +300,13 @@ def mover_orden(num_orden_cerrar, lowestAsk, tipo):
 			print('**********************************************************************************************************************************')
 			print('### INTENTANDO PONER ORDEN DE ' + tipo + ' A NUEVO PRECIO ###')
 			print('**********************************************************************************************************************************')
+			guardar_historial('INTENTANDO PONER ORDEN DE ' + tipo)
 		else:
 			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL MOVER ORDEN DE ' + tipo + ' ###')
 			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+			guardar_historial('ERROR AL MOVER ORDEN DE ' + tipo + ';' + sys.exc_info()[1])
 		return '-1'	
 
 def esperando_ticker():
@@ -441,6 +450,13 @@ def imprimir_help():
 	print('###############################################################')
 	print('')
 	exit()
+
+def guardar_historial(txt):
+	global file_log
+	
+	f = open(file_log, 'a')
+	f.write(time.strftime("%d/%m/%y") + ' ' + time.strftime("%H:%M:%S") + ';' + txt + '\n')
+	f.close()
 	
 class info_alt:
 	def __init__(self):
@@ -465,9 +481,10 @@ class info_alt:
 
 # PROGRAMA PRINCIPAL ##########################################################
 
-global EMA1, EMA2, _nonce, altstr, coins, API_key, Secret, inicio_bot, l_ticker, coins_trader, ticker_actualizado, hist_actualizado, trade_hist, n_ticker, n_hist
+global EMA1, EMA2, _nonce, altstr, coins, API_key, Secret, inicio_bot, l_ticker, coins_trader, ticker_actualizado, hist_actualizado, trade_hist, n_ticker, n_hist, file_log
 
 pos = encontrada_opcion(sys.argv, '-h')
+file_log = time.strftime("%y%m%d") + '_' + time.strftime("%H%M%S") + '.log'
 if  pos > 0:
 	imprimir_help()
 
@@ -497,6 +514,7 @@ else:
 	fichero = 'pobot_MAX.cfg'
 	print('### CARGANDO FICHERO ' + fichero + ' CON LA CONFIGURACION ESTANDAR ###')
 
+guardar_historial(fichero)
 
 try:
 	configuracion = open(fichero, 'r')
@@ -584,6 +602,9 @@ else:
 		while saldo_inv <= 0.0 or saldo_inv > saldoUSDT:
 			print('Entra saldo Maximo XMR a invertir: ' + str(saldoUSDT) + ' ' + altstr)
 			saldo_inv = float(input('Inversion:? '))
+			
+guardar_historial('Alt escogida: ' + altstr)
+guardar_historial('Saldo Invertido: ' + str(saldo_inv))
 
 pos = encontrada_opcion(sys.argv, '-o')
 if pos > 0:
@@ -591,6 +612,7 @@ if pos > 0:
 else:	
 	funcionamiento = menu_funcionamiento()
 
+guardar_historial('Opcion Escogida: ' + str(funcionamiento))
 ticker = leer_ticker_full()
 
 if funcionamiento != 5:
@@ -639,7 +661,8 @@ if funcionamiento == 1:
 	for cn in working_alts:
 		coins.append(cn)
 		a_margen.append(margen/100)
-
+		
+	guardar_historial('Margen Incremento 24h: ' + str(margen_incremento_24h) + ';Margen de Incremento Actual: ' + str(margen_incrememto_act) + ';Margen de Beneficio: ' + str(margen))
 elif funcionamiento == 2:
 	pos = encontrada_opcion(sys.argv, '-m')
 	if pos > 0:
@@ -663,6 +686,7 @@ elif funcionamiento == 2:
 	print('Entra los margenes para cada Alt. Si ponemos 0 esa Alt no se utiliza en el bot')
 	print('')
 	
+	t = ''
 	for cn in working_alts:
 		print('Margen para ' + cn + ' >=0.5 o 0 para No Altcoin : ? ')
 		m1 = str(input())
@@ -670,7 +694,9 @@ elif funcionamiento == 2:
 		if m >= 0.5:
 			coins.append(cn)
 			a_margen.append(m/100)
+			t = t + ';Margen para ' + cn + ': ' + str(m)
 			
+	guardar_historial('Margen Incremento 24h: ' + str(margen_incremento_24h) + ';Margen de Incremento Actual: ' + str(margen_incrememto_act) + t)
 elif funcionamiento == 3:
 	margen_incremento_24h = 0.0
 	
@@ -735,6 +761,8 @@ elif funcionamiento == 5:
 	else:
 		valor_entrada = float(input('Entra el valor de Entrada para el PUMP (0 No se utiliza): ? '))
 		
+	guardar_historial('Alt para PUMP: ' + al + ';Margen de Beneficio: ' + str(margen) + ';Valor entrada PUMP: ' + str(valor_entrada))
+		
 elif funcionamiento == 6:
 	pos = encontrada_opcion(sys.argv, '-m')
 	if pos > 0:
@@ -783,6 +811,8 @@ elif funcionamiento == 6:
 		while margen <= 0.5:
 			margen2 = str(input('Entra el margen de beneficio para todas las Alts: ? ')) 
 			margen = float(margen2.replace(',','.'))
+			
+	guardar_historial('Margen Incremento 24h: ' + str(margen_incremento_24h) + ';Margen de Incremento Actual: ' + str(margen_incrememto_act) + ';Maren de Perdidas: ' + str(stop_loss) + ';Num Max Alts Tradear; ' + str(num_max_alts_trader) + ';Margen de Beneficio: ' + str(margen))
 
 	margen = margen/100
 
@@ -797,7 +827,8 @@ else:
 			ciclos = int(input('Numero de ciclos total entre todas las Alts para la Inversion:? '))
 		else:
 			ciclos = int(input('Numero de ciclos de la Inversion:? '))
-		
+
+guardar_historial('Total de Ciclos: ' + str(ciclos))		
 coins_trader = []
 
 if funcionamiento < 6:
