@@ -409,6 +409,39 @@ def coincidencia(coins_trader, c):
 			
 	return encontrado
 	
+def encontrada_opcion(mat, busqueda):
+	n = 0
+	for m in mat:
+		if m == busqueda:
+			return n
+		else:
+			n += 1
+	return -1
+	
+def imprimir_help():
+	print('')
+	print('###############################################################')
+	print('#                                                             #')
+	print('# OPCIONES DE LA LINEA DE COMANDOS PARA pobot_MAX.py          #')
+	print('#                                                             #')
+	print('# -h Help -- Ver las opciones                                 #')
+	print('# -f Fichero de configuracion  (Ej. best_alts.cfg)            #')
+	print('# -a Alt escogida para tradear (Valores de 1 a 4)             #')
+	print('# -s Saldo Alt escogida a invertir en el total de las Alts    #')
+	print('# -o Opcion escogida  (Valores de 1 a 6)                      #')
+	print('# -m Margen de Incremento de la Alt 24h                       #')
+	print('# -n Margen de Incremento Actual de la Alt                    #')
+	print('# -b Margen de Beneficio para todas las ALts                  #')
+	print('# -l Stop Loss (Solo en la opcion 6)                          #')
+	print('# -t Numero Maximo de Alts para Tradear (Solo Opcion 6)       #')
+	print('# -p Alt a Pumpear (Solo Opcion 5) (Ej. LTC)                  #')
+	print('# -e Valor Entrada del Pump (Solo Opcion 5)                   #') 
+	print('# -c Numero de Ciclos del Bot                                 #')          
+	print('#                                                             #')
+	print('###############################################################')
+	print('')
+	exit()
+	
 class info_alt:
 	def __init__(self):
 		self.posicion = 0
@@ -434,6 +467,10 @@ class info_alt:
 
 global EMA1, EMA2, _nonce, altstr, coins, API_key, Secret, inicio_bot, l_ticker, coins_trader, ticker_actualizado, hist_actualizado, trade_hist, n_ticker, n_hist
 
+pos = encontrada_opcion(sys.argv, '-h')
+if  pos > 0:
+	imprimir_help()
+
 print('')
 print('     **************************************************************************************')
 print('     **************************************************************************************')
@@ -452,12 +489,14 @@ print('')
 
 _nonce = int("{:.6f}".format(time.time()).replace('.', ''))
 
-if(len(sys.argv) == 3) and sys.argv[1] == '-c':
-	fichero = sys.argv[2]
-	print('### CARGANDO FICHERO ' + fichero + ' CON LA CONFIGURACION PERSONALIZADA')
+pos = encontrada_opcion(sys.argv, '-f')
+if  pos > 0:
+	fichero = sys.argv[pos+1]
+	print('### CARGANDO FICHERO ' + fichero + ' CON LA CONFIGURACION PERSONALIZADA ###')
 else:
 	fichero = 'pobot_MAX.cfg'
-	print('### CARGANDO FICHERO ' + fichero + ' CON LA CONFIGURACION ESTANDAR')
+	print('### CARGANDO FICHERO ' + fichero + ' CON LA CONFIGURACION ESTANDAR ###')
+
 
 try:
 	configuracion = open(fichero, 'r')
@@ -486,8 +525,13 @@ except Exception:
 
 saldo_inv = 0.0
 margen_incrememto_act = 0.0
+
+pos = encontrada_opcion(sys.argv, '-a')
+if pos > 0:
+	alt = int(sys.argv[pos+1])
+else:
+	alt = menu_alt()
 	
-alt = menu_alt()
 working_alts = []
 
 print('')
@@ -495,33 +539,57 @@ print('')
 if alt == 1:
 	altstr = 'USDT'
 	working_alts = a_coins
-	saldoUSDT = leer_balance(altstr)
-	while saldo_inv <= 0.0 or saldo_inv > saldoUSDT:
-		print('Entra saldo Maximo USDT a invertir. Maximo Disponible: ' + str(saldoUSDT) + ' ' + altstr)
-		saldo_inv = float(input('Inversion:? '))
+	
+	pos = encontrada_opcion(sys.argv, '-s')
+	if pos > 0:
+		saldo_inv = float(sys.argv[pos+1])
+	else:
+		saldoUSDT = leer_balance(altstr)
+		while saldo_inv <= 0.0 or saldo_inv > saldoUSDT:
+			print('Entra saldo Maximo USDT a invertir. Maximo Disponible: ' + str(saldoUSDT) + ' ' + altstr)
+			saldo_inv = float(input('Inversion:? '))
 elif alt == 2:
 	altstr = 'BTC'
 	working_alts = b_coins
-	saldoUSDT = leer_balance(altstr)
-	while saldo_inv <= 0.0 or saldo_inv > saldoUSDT:
-		print('Entra saldo Maximo BTC a invertir: ' + str(saldoUSDT) + ' ' + altstr)
-		saldo_inv = float(input('Inversion:? '))
+	
+	pos = encontrada_opcion(sys.argv, '-s')
+	if pos > 0:
+		saldo_inv = float(sys.argv[pos+1])
+	else:
+		saldoUSDT = leer_balance(altstr)
+		while saldo_inv <= 0.0 or saldo_inv > saldoUSDT:
+			print('Entra saldo Maximo BTC a invertir: ' + str(saldoUSDT) + ' ' + altstr)
+			saldo_inv = float(input('Inversion:? '))
 elif alt == 3:
 	altstr = 'ETH'
 	working_alts = c_coins
-	saldoUSDT = leer_balance(altstr)
-	while saldo_inv <= 0.0 or saldo_inv > saldoUSDT:
-		print('Entra saldo Maximo ETH a invertir: ' + str(saldoUSDT) + ' ' + altstr)
-		saldo_inv = float(input('Inversion:? '))
+	
+	pos = encontrada_opcion(sys.argv, '-s')
+	if pos > 0:
+		saldo_inv = float(sys.argv[pos+1])
+	else:
+		saldoUSDT = leer_balance(altstr)
+		while saldo_inv <= 0.0 or saldo_inv > saldoUSDT:
+			print('Entra saldo Maximo ETH a invertir: ' + str(saldoUSDT) + ' ' + altstr)
+			saldo_inv = float(input('Inversion:? '))
 else:
 	altstr = 'XMR'
 	working_alts = d_coins
-	saldoUSDT = leer_balance(altstr)
-	while saldo_inv <= 0.0 or saldo_inv > saldoUSDT:
-		print('Entra saldo Maximo XMR a invertir: ' + str(saldoUSDT) + ' ' + altstr)
-		saldo_inv = float(input('Inversion:? '))
-		
-funcionamiento = menu_funcionamiento()
+	
+	pos = encontrada_opcion(sys.argv, '-s')
+	if pos > 0:
+		saldo_inv = float(sys.argv[pos+1])
+	else:
+		saldoUSDT = leer_balance(altstr)
+		while saldo_inv <= 0.0 or saldo_inv > saldoUSDT:
+			print('Entra saldo Maximo XMR a invertir: ' + str(saldoUSDT) + ' ' + altstr)
+			saldo_inv = float(input('Inversion:? '))
+
+pos = encontrada_opcion(sys.argv, '-o')
+if pos > 0:
+	funcionamiento = int(sys.argv[pos+1])
+else:	
+	funcionamiento = menu_funcionamiento()
 
 ticker = leer_ticker_full()
 
@@ -540,31 +608,55 @@ coins = []
 a_margen = []
 
 if funcionamiento == 1:
-	print('')
-	margen_incremento_24h = float(input('Entra el margen de incremento de las ultimas 24h para entrar a invertir:? '))
+	pos = encontrada_opcion(sys.argv, '-m')
+	if pos > 0:
+		margen_incremento_24h = float(sys.argv[pos+1])
+	else:	
+		print('')
+		margen_incremento_24h = float(input('Entra el margen de incremento de las ultimas 24h para entrar a invertir:? '))
+		
 	margen_incremento_24h = margen_incremento_24h/100
 	
-	print('')
-	margen_incrememto_act = float(input('Entra el margen de incremento actual de la Alt para entrar a invertir:? '))
+	pos = encontrada_opcion(sys.argv, '-n')
+	if pos > 0:
+		margen_incrememto_act = float(sys.argv[pos+1])
+	else:	
+		print('')
+		margen_incrememto_act = float(input('Entra el margen de incremento actual de la Alt para entrar a invertir (0% -> 100%):? '))
+		
 	margen_incrememto_act = margen_incrememto_act/100
-	
-	print('')
-	margen = 0.0
-	while margen <= 0.5:
-		margen2 = str(input('Entra el margen de beneficio para todas las Alts: ? ')) 
-		margen = float(margen2.replace(',','.'))
+
+	pos = encontrada_opcion(sys.argv, '-b')
+	if pos > 0:
+		margen = float(sys.argv[pos+1])
+	else:		
+		print('')
+		margen = 0.0
+		while margen <= 0.5:
+			margen2 = str(input('Entra el margen de beneficio para todas las Alts: ? ')) 
+			margen = float(margen2.replace(',','.'))
 		
 	for cn in working_alts:
 		coins.append(cn)
 		a_margen.append(margen/100)
 
 elif funcionamiento == 2:
-	print('')
-	margen_incremento_24h = float(input('Entra el margen de incremento de las ultimas 24h para entrar a invertir:? '))
+	pos = encontrada_opcion(sys.argv, '-m')
+	if pos > 0:
+		margen_incremento_24h = float(sys.argv[pos+1])
+	else:	
+		print('')
+		margen_incremento_24h = float(input('Entra el margen de incremento de las ultimas 24h para entrar a invertir:? '))
+
 	margen_incremento_24h = margen_incremento_24h/100
 	
-	print('')
-	margen_incrememto_act = float(input('Entra el margen de incremento actual de la Alt para entrar a invertir:? '))
+	pos = encontrada_opcion(sys.argv, '-n')
+	if pos > 0:
+		margen_incrememto_act = float(sys.argv[pos+1])
+	else:	
+		print('')
+		margen_incrememto_act = float(input('Entra el margen de incremento actual de la Alt para entrar a invertir (0% -> 100%):? '))
+		
 	margen_incrememto_act = margen_incrememto_act/100
 	
 	print('')
@@ -581,11 +673,16 @@ elif funcionamiento == 2:
 			
 elif funcionamiento == 3:
 	margen_incremento_24h = 0.0
-	print('')
-	margen = 0.0
-	while margen <= 0.5:
-		margen2 = str(input('Entra el margen de beneficio para todas las Alts: ? ')) 
-		margen = float(margen2.replace(',','.'))
+	
+	pos = encontrada_opcion(sys.argv, '-b')
+	if pos > 0:
+		margen = float(sys.argv[pos+1])
+	else:		
+		print('')
+		margen = 0.0
+		while margen <= 0.5:
+			margen2 = str(input('Entra el margen de beneficio para todas las Alts: ? ')) 
+			margen = float(margen2.replace(',','.'))
 		
 	for cn in working_alts:
 		coins.append(cn)
@@ -605,8 +702,14 @@ elif funcionamiento == 4:
 			a_margen.append(m/100)	
 elif funcionamiento == 5:
 	margen_incremento_24h = 0.0
-	print('')
-	al = input ('Entra la Alt para hacer PUMP: ')
+	valor_entrada = 0.0
+	
+	pos = encontrada_opcion(sys.argv, '-p')
+	if pos > 0:
+		al = str(sys.argv[pos+1])
+	else:	
+		print('')
+		al = input ('Entra la Alt para hacer PUMP: ')
 	al = al.upper()
 	alt = al.split('_')
 	if len(alt) == 1:
@@ -614,47 +717,86 @@ elif funcionamiento == 5:
 	else:
 		coins.append(alt[1])
 	
-	print('')
-	margen = 0.0
-	while margen <= 0.5:
-		margen2 = str(input('Entra el margen de beneficio para la Alt: ? ')) 
-		margen = float(margen2.replace(',','.'))
+	pos = encontrada_opcion(sys.argv, '-b')
+	if pos > 0:
+		margen = float(sys.argv[pos+1])
+	else:		
+		print('')
+		margen = 0.0
+		while margen <= 0.5:
+			margen2 = str(input('Entra el margen de beneficio para la Alt: ? ')) 
+			margen = float(margen2.replace(',','.'))
+			
 	a_margen.append(margen/100)
+	
+	pos = encontrada_opcion(sys.argv, '-e')
+	if pos > 0:
+		valor_entrada = float(sys.argv[pos+1])
+	else:
+		valor_entrada = float(input('Entra el valor de Entrada para el PUMP (0 No se utiliza): ? '))
+		
 elif funcionamiento == 6:
-	print('')
-	margen_incremento_24h = float(input('Entra el margen de incremento de las ultimas 24h para entrar a invertir (0% -> 100%):? '))
+	pos = encontrada_opcion(sys.argv, '-m')
+	if pos > 0:
+		margen_incremento_24h = float(sys.argv[pos+1])
+	else:	
+		print('')
+		margen_incremento_24h = float(input('Entra el margen de incremento de las ultimas 24h para entrar a invertir:? '))
+		
 	margen_incremento_24h = margen_incremento_24h/100
 	
-	print('')
-	margen_incrememto_act = float(input('Entra el margen de incremento actual de la Alt para entrar a invertir (0% -> 100%):? '))
+	pos = encontrada_opcion(sys.argv, '-n')
+	if pos > 0:
+		margen_incrememto_act = float(sys.argv[pos+1])
+	else:	
+		print('')
+		margen_incrememto_act = float(input('Entra el margen de incremento actual de la Alt para entrar a invertir (0% -> 100%):? '))
+	
 	margen_incrememto_act = margen_incrememto_act/100
-	
-	print('')
-	stop_loss = float(input('Entra el margen de perdidas aceptado (0 no se utiliza):? '))
+
+	pos = encontrada_opcion(sys.argv, '-l')
+	if pos > 0:
+		stop_loss = float(sys.argv[pos+1])
+	else:	
+		print('')
+		stop_loss = float(input('Entra el margen de perdidas aceptado (0 no se utiliza):? '))
+		
 	stop_loss = stop_loss/100
-	
-	print('')
-	num_max_alts_trader = 0
-	while num_max_alts_trader < 1 or num_max_alts_trader > len(working_alts):
-		num_max_alts_trader = int(input('Entra el Num. Max de Alts a tradear: ? '))
+
+	pos = encontrada_opcion(sys.argv, '-t')
+	if pos > 0:
+		num_max_alts_trader = int(sys.argv[pos+1])
+	else:		
+		print('')
+		num_max_alts_trader = 0
+		while num_max_alts_trader < 1 or num_max_alts_trader > len(working_alts):
+			num_max_alts_trader = int(input('Entra el Num. Max de Alts a tradear: ? '))
 
 	saldo_inv = saldo_inv / num_max_alts_trader
 	
-	print('')
-	margen = 0.0
-	while margen <= 0.5:
-		margen2 = str(input('Entra el margen de beneficio para todas las Alts (0.5% -> 100%): ? '))
-		margen = float(margen2.replace(',','.'))
+	pos = encontrada_opcion(sys.argv, '-b')
+	if pos > 0:
+		margen = float(sys.argv[pos+1])
+	else:		
+		print('')
+		margen = 0.0
+		while margen <= 0.5:
+			margen2 = str(input('Entra el margen de beneficio para todas las Alts: ? ')) 
+			margen = float(margen2.replace(',','.'))
 
 	margen = margen/100
 
-print('')
-ciclos = 0
-while ciclos < 1:
-	if funcionamiento == 6:
-		ciclos = int(input('Numero de ciclos total entre todas las Alts para la Inversion:? '))
-	else:
-		ciclos = int(input('Numero de ciclos de la Inversion:? '))
+pos = encontrada_opcion(sys.argv, '-c')
+if pos > 0:
+	ciclos = int(sys.argv[pos+1])
+else:	
+	print('')
+	ciclos = 0
+	while ciclos < 1:
+		if funcionamiento == 6:
+			ciclos = int(input('Numero de ciclos total entre todas las Alts para la Inversion:? '))
+		else:
+			ciclos = int(input('Numero de ciclos de la Inversion:? '))
 		
 coins_trader = []
 
@@ -691,6 +833,8 @@ if funcionamiento == 6:
 	total_beneficio = 0.0
 	n_ciclos_bene = 0
 	n_ciclos_perd = 0
+	alts_beneficio = []
+	alts_perdidas = []
 	primera = True
 	while ciclos_global <= ciclos:
 
@@ -777,8 +921,10 @@ if funcionamiento == 6:
 					
 					if c.last_venta - c.last_compra > 0:
 						n_ciclos_bene +=1
+						alts_beneficio.append(c.n_alt)
 					else:
 						n_ciclos_perd +=1
+						alts_perdidas.append(c.n_alt)
 						
 					total_beneficio += (c.last_venta * c.inv_last_venta) - c.inv_last_compra
 	
@@ -829,6 +975,21 @@ if funcionamiento == 6:
 	print('')
 	print(' TOTAL BENEFICIO: ' + str(total_beneficio))
 	print('')
+	if len(alts_beneficio) > 0:
+		print('### ALTS CON BENEFICIO --------------------------------------')
+		copia_alts_beneficio = []
+		for a in alts_beneficio:
+			if a not in copia_alts_beneficio:
+				print('(' + str(alts_beneficio.count(a)) + ') ' + a)
+				copia_alts_beneficio.append(a)
+	print('')
+	if len(alts_perdidas) > 0:
+		print('### ALTS CON PERDIDAS --------------------------------------')
+		copia_alts_perdidas = []
+		for a in alts_perdidas:
+			if a not in copia_alts_perdidas:
+				print('(' + str(alts_perdidas.count(a)) + ') ' + a)
+				copia_alts_perdidas.append(a)	
 	
 else:
 	finalizar_bot = False
@@ -840,13 +1001,23 @@ else:
 				if c.tipo_operacion == 'SIN ORDEN':
 					if (c.percentChange >= margen_incremento_24h and c.lowestAsk <= (c.high24hr + c.low24hr) * margen_incrememto_act) or margen_incremento_24h == 0.0:
 						esperando_ticker()
-						num_last_orden2, last_compra2 = realizar_compra(c.n_alt, c.lowestAsk, saldo_inv)
-						if num_last_orden2 != '-1':
-							c.num_last_orden = num_last_orden2
-							c.last_compra = last_compra2
-							c.tipo_operacion = 'COMPRA'
-							c.inv_last_compra = saldo_inv
-							time.sleep(pausa)			
+						if funcionamiento == 5 and valor_entrada > 0:
+							if c.lowestAsk <= valor_entrada:
+								num_last_orden2, last_compra2 = realizar_compra(c.n_alt, c.lowestAsk, saldo_inv)
+								if num_last_orden2 != '-1':
+									c.num_last_orden = num_last_orden2
+									c.last_compra = last_compra2
+									c.tipo_operacion = 'COMPRA'
+									c.inv_last_compra = saldo_inv
+									time.sleep(pausa)
+						else:
+							num_last_orden2, last_compra2 = realizar_compra(c.n_alt, c.lowestAsk, saldo_inv)
+							if num_last_orden2 != '-1':
+								c.num_last_orden = num_last_orden2
+								c.last_compra = last_compra2
+								c.tipo_operacion = 'COMPRA'
+								c.inv_last_compra = saldo_inv
+								time.sleep(pausa)			
 					else:
 						print('-----------------------------------------------------------------------------------------------------------------')
 						print('### ' + c.n_alt + ' ESPERANDO QUE SE DEN LAS CONDICIONES PARA NUEVA ORDEN DE COMPRA ###')
