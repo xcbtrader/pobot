@@ -915,6 +915,7 @@ if funcionamiento == 6:
 					print('-----------------------------------------------------------------------------------------------------------------')
 					print('### ORDEN DE COMPRA NUM: ' + c.num_last_orden + ' PARA ' + c.n_alt + ' FINALIZADA CORRECTAMENTE ###')
 					print('-----------------------------------------------------------------------------------------------------------------')
+					guardar_historial('FINALIZADA ORDEN DE COMPRA NUM: ' + c.num_last_orden + '; Alt:  ' + c.n_alt)
 					esperando_ticker()
 					precio_venta = c.last_compra + (c.last_compra * c.margen)
 					if precio_venta < c.highestBid:
@@ -949,6 +950,7 @@ if funcionamiento == 6:
 					print('-----------------------------------------------------------------------------------------------------------------')
 					print('### ORDEN DE VENTA NUM: ' + c.num_last_orden + ' PARA ' + c.n_alt + ' FINALIZADA CORRECTAMENTE ###')
 					print('-----------------------------------------------------------------------------------------------------------------')
+					guardar_historial('FINALIZADA ORDEN DE VENTA NUM: ' + c.num_last_orden + '; Alt:  ' + c.n_alt)
 					
 					if c.last_venta - c.last_compra > 0:
 						n_ciclos_bene +=1
@@ -1006,6 +1008,7 @@ if funcionamiento == 6:
 	print('')
 	print(' TOTAL BENEFICIO: ' + str(total_beneficio))
 	print('')
+	guardar_historial('FINALIZADO CORRECTAMENTE CON BENEFICIO: ' + str(total_beneficio))
 	if len(alts_beneficio) > 0:
 		print('### ALTS CON BENEFICIO --------------------------------------')
 		copia_alts_beneficio = []
@@ -1059,6 +1062,7 @@ else:
 						print('-----------------------------------------------------------------------------------------------------------------')
 						print('### ORDEN DE COMPRA NUM: ' + c.num_last_orden + ' PARA ' + c.n_alt + ' FINALIZADA CORRECTAMENTE ###')
 						print('-----------------------------------------------------------------------------------------------------------------')
+						guardar_historial('FINALIZADA ORDEN DE COMPRA NUM: ' + c.num_last_orden + '; Alt: ' + c.n_alt)
 						esperando_ticker()
 						precio_venta = c.last_compra + (c.last_compra * c.margen)
 						if precio_venta < c.highestBid:
@@ -1093,9 +1097,11 @@ else:
 						print('-----------------------------------------------------------------------------------------------------------------')
 						print('### ORDEN DE VENTA NUM: ' + c.num_last_orden + ' PARA ' + c.n_alt + ' FINALIZADA CORRECTAMENTE ###')
 						print('-----------------------------------------------------------------------------------------------------------------')
+						guardar_historial('FINALIZADA ORDEN DE VENTA NUM: ' + c.num_last_orden + '; Alt: ' + c.n_alt)
 						print('-----------------------------------------------------------------------------------------------------------------')
 						print('### FINALIZADO CICLO: ' + str(c.ciclo) + ' - BENEFICIO: ' + str((c.last_venta * c.inv_last_venta) - c.inv_last_compra) + ' ' + str(((c.last_venta * c.inv_last_venta * 100)/c.inv_last_compra)-100) + '% ###')
 						print('-----------------------------------------------------------------------------------------------------------------')
+						guardar_historial('FINALIZADO CICLO: ' + str(c.ciclo) + ';BENEFICIO: ' + str((c.last_venta * c.inv_last_venta) - c.inv_last_compra) + ';' + str(((c.last_venta * c.inv_last_venta * 100)/c.inv_last_compra)-100))
 						c.tipo_operacion = 'SIN ORDEN'
 						c.beneficio_total += (c.last_venta * c.inv_last_venta) - c.inv_last_compra
 						c.num_last_orden = ''
@@ -1124,7 +1130,11 @@ else:
 	print('###############################################################')
 	print('')
 	print('Ejecutados ' + str(ciclos) + ' ciclos para ' + altstr)
+	
 	print('Para las siguientes AltCoins:')
+	t = ''
 	for c in coins_trader:
 		print(c.n_alt + ' -- Beneficio Total: ' + str(c.beneficio_total))
+		t = t + ';' + c.n_alt + ';Beneficio Total: ' + str(c.beneficio_total)
 	print('###############################################################')
+	guardar_historial('FINALIZADO BOT - Ejecutados ' + str(ciclos) + ';ciclos para ' + altstr + t)
