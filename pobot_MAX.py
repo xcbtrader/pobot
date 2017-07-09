@@ -257,7 +257,7 @@ def realizar_compra(c, lowestAsk, saldo_inv):
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL CREAR ORDEN DE COMPRA ' + c + ' ###')
 			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-			guardar_historial('ERROR AL CREAR ORDEN DE COMPRA ' + c + ';' + sys.exc_info()[1])
+			guardar_historial('ERROR AL CREAR ORDEN DE COMPRA ' + c + ';' + str(sys.exc_info()[1]))
 		return '-1', 0.0
 
 def realizar_venta(c, precio_venta, saldo_inv):
@@ -282,7 +282,7 @@ def realizar_venta(c, precio_venta, saldo_inv):
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL CREAR ORDEN DE VENTA ' + c + ' ###')
 			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-			guardar_historial('ERROR AL CREAR ORDEN DE VENTA ' + c + ';' + sys.exc_info()[1])
+			guardar_historial('ERROR AL CREAR ORDEN DE VENTA ' + c + ';' + str(sys.exc_info()[1]))
 		return '-1'	
 
 def mover_orden(num_orden_cerrar, lowestAsk, tipo):	
@@ -306,7 +306,7 @@ def mover_orden(num_orden_cerrar, lowestAsk, tipo):
 			print("### ERROR INESPERADO TIPO:", sys.exc_info()[1])
 			print('### ERROR AL MOVER ORDEN DE ' + tipo + ' ###')
 			print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-			guardar_historial('ERROR AL MOVER ORDEN DE ' + tipo + ';' + sys.exc_info()[1])
+			guardar_historial('ERROR AL MOVER ORDEN DE ' + tipo + ';' + str(sys.exc_info()[1]))
 		return '-1'	
 
 def esperando_ticker():
